@@ -7,12 +7,10 @@ console.ignoredYellowBox = ['Remote debugger']
 
 export default class App extends React.Component {
   render() {
-    console.log("L8 App made react-native 0.52 work ");
     return (
       <View style={styles.container}>
         <Text>{"\n"}</Text>
         <FlashCard />
-        <Text>{"\n"}</Text>
       </View>
     )
   }
