@@ -1,0 +1,7 @@
+export const GET_ALL_DECKS = "GET_ALL_DECKS"
+export const GET_DECK = "GET_DECK"
+export const SAVE_DECK = "SAVE_DECK"
+export const DELETE_DECK = "DELETE_DECK"
+export const GET_CARD = "GET_CARD"
+export const SAVE_CARD = "SAVE_CARD"
+export const DELETE_CARD ="DELETE_CARD"

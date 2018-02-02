@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 import {
   Text,
   TextInput,
@@ -13,6 +14,7 @@ import {
 } from "@expo/vector-icons"
 import * as API from '../utils/api'
 import { setTestData } from '../utils/helpers'
+import {getAllDecksAction, getCardAction} from '../actions'
 
 class FlashCard extends Component{
 
@@ -23,12 +25,35 @@ class FlashCard extends Component{
   }
 
   componentWillMount(){
-    API.getAllDecks().then((data) => {
-      this.setState({
-        card: JSON.parse(data).JavaScript
-      })
-    })
+
+    this.getCard("React")
+
   }//componentWillMount()
+
+  getCard(cardId){
+    const { dispatch } = this.props
+
+    API.getAllDecks()
+    .then(result => {
+      decks = JSON.parse(result)
+      if(decks.hasOwnProperty(cardId)){
+        dispatch(getCardAction(decks[cardId]))
+        this.setState({
+          card: decks[cardId]
+        })
+      }
+    })
+  }
+
+  getNextCard(){
+    //TODO: returns next card in the Deck
+    //For arrow-forward
+  }
+
+  getPreviousCard(){
+    //TODO: returns previos card in the Deck
+    //For arrow-back
+  }
 
   setFrontEditable(){
     this.setState({
@@ -52,19 +77,8 @@ class FlashCard extends Component{
   render(){
     setTestData()
     const { front_editable, back_editable, card } = this.state
-    console.log("L55 FlashCard this.state = ", this.state)
-
-    // let question = [
-    //   {
-    //   answer: "The combination of a function and the lexical environment within which that function was declared.",
-    //   question: "What is a closure?",
-    //   },
-    // ]
-    // console.log("L66 FlashCard: ", question[0].question)
-    //works OK
-
-    card ? console.log("L66 FlashCard card.questions: ", card.questions) : null
-    // API.getAllDecks().then(data => console.log("L45 getAllDecks from FlashCard ", JSON.parse(data)))
+    console.log("L53 FlashCard this.props = ", this.props)
+    console.log("L54 FlashCard this.state = ", this.state)
 
     return(
       <View style={styles.container}>
@@ -96,7 +110,7 @@ class FlashCard extends Component{
           <Text>Do you concure?</Text>
           <Text>{"\n"}</Text>
         </View>
-        <View>
+        <View style={styles.answer_buttons}>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.button_text}>Correct</Text>
           </TouchableOpacity>
@@ -113,9 +127,6 @@ class FlashCard extends Component{
             <Text style={{fontSize: 25}}>Hint</Text>
           </TouchableOpacity>
           <TouchableOpacity>
-            <Text style={{fontSize: 25}}>Answer</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
             <MaterialIcons name="arrow-forward" size={35}/>
           </TouchableOpacity>
         </View>
@@ -129,8 +140,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   deck_title: {
     flexDirection: "row",
@@ -149,15 +158,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     fontSize: 24,
   },
+  answer_buttons:{
+    flexDirection: "column",
+    alignItems: "center",
+  },
   button: {
     backgroundColor: "#A3A3A3",
-    // width: 80,
-    height: "auto",
+    width: 160,
+    height: 60,
     borderRadius: 3,
     borderTopWidth: 1,
     borderRightWidth: 1,
     borderBottomWidth: 1,
     borderLeftWidth: 1,
+    justifyContent: "center",
   },
   button_text: {
     fontSize: 25,
@@ -172,4 +186,17 @@ const styles = StyleSheet.create({
   }
 })
 
-export default FlashCard
+function mapStateToProps(state){
+  const {getCardReducer} = state
+  return {
+    getCardReducer,
+  }
+}
+
+// function mapDispatchToProps(dispatch){
+//   return {
+//     getAllDecks: () => dispatch(getAllDecks()),
+//   }
+// }
+
+export default connect(mapStateToProps)(FlashCard)
