@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import FlashCard from './components/FlashCard'
 import thunk from 'redux-thunk'
 import reducers from './reducers'
+import Home from './components/Home'
 
 console.ignoredYellowBox = ['Remote debugger']
 
@@ -14,6 +15,7 @@ const store = createStore(
     applyMiddleware(thunk)
   )
 )
+// <FlashCard />
 
 export default class App extends React.Component {
   render() {
@@ -21,7 +23,7 @@ export default class App extends React.Component {
       <Provider store={store}>
           <View style={styles.container}>
             <Text>{"\n"}</Text>
-            <FlashCard />
+            <Home/>
           </View>
       </Provider>
     )

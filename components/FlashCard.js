@@ -25,9 +25,7 @@ class FlashCard extends Component{
   }
 
   componentWillMount(){
-
     this.getCard("React")
-
   }//componentWillMount()
 
   getCard(cardId){
@@ -67,7 +65,7 @@ class FlashCard extends Component{
     })
   }
 
-  saveChanges(){
+  saveChanges(card){
     //Save changes into the card
 
     //setState front_editable: false
