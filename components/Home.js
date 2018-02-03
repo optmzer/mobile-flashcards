@@ -31,7 +31,7 @@ class Home extends Component {
   render(){
 
     let listData = convertObjectToArray(cardStorage)
-    console.log("L32 Home listData = ", listData)
+    // console.log("L32 Home listData = ", listData)
     return(
       <View style={styles.continer}>
         <Text>Home</Text>

@@ -10,6 +10,7 @@ import {
   Text,
   View,
   StatusBar,
+  Platform,
 } from 'react-native'
 import { TabNavigator, StackNavigator } from 'react-navigation'
 import { Constants } from 'expo'
@@ -18,6 +19,7 @@ import thunk from 'redux-thunk'
 import reducers from './reducers'
 import Home from './components/Home'
 import AddDeck from './components/AddDeck'
+import { FontAwesome } from '@expo/vector-icons'
 
 console.ignoredYellowBox = ['Remote debugger']
 
@@ -45,16 +47,35 @@ const DeckTabs = TabNavigator({
     screen: Home,
     navigationOptions: {
       tabBarLabel: "Home",
-      tabBarIcon: ({iconColor}) => <FontAwesome name="home" size={25} color={iconColor}/>,
+      tabBarIcon: ({tintColor}) => <FontAwesome name="home" size={25} color={tintColor}/>,
     }
   },//Home
   AddDeck: {
     screen: AddDeck,
     navigationOptions: {
       tabBarLabel: "Add New Deck",
-      tabBarIcon: ({iconColor}) => <FontAwesome name="plus-square-o" siae={25} color={iconColor}/>,
+      tabBarIcon: ({tintColor}) => <FontAwesome name="plus-square-o" size={25} color={tintColor}/>,
     }
   },//AddDeck
+}, {
+  navigationOptions: {
+    headers: null,
+  },
+  tabBarOptions: Platform.OS === 'ios' ?
+    {
+      // iOS tabBarOptions
+      showLabel: true,
+      activeTintColor: "#ffcc00",
+      style: {
+      },
+    } : {
+      // Android tabBarOptions
+      showIcon: true,
+      showLabel: true,
+      activeTintColor: "#ffcc00",
+      style: {
+      },
+    },//tabBarOptions
 })//TabNavigator()
 
 // <FlashCard />
