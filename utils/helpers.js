@@ -19,6 +19,7 @@ export function setTestData(){
 
 export const cardStorage = {
   React: {
+    deckId: 1,
     title: 'React',
     questions: [
       {
@@ -32,6 +33,7 @@ export const cardStorage = {
     ]
   },
   JavaScript: {
+    deckId: 2,
     title: 'JavaScript',
     questions: [
       {
@@ -41,6 +43,7 @@ export const cardStorage = {
     ]
   },
   React1: {
+    deckId: 3,
     title: 'React',
     questions: [
       {
@@ -54,6 +57,7 @@ export const cardStorage = {
     ]
   },
   JavaScript1: {
+    deckId: 4,
     title: 'JavaScript',
     questions: [
       {
@@ -63,6 +67,7 @@ export const cardStorage = {
     ]
   },
   React2: {
+    deckId: 5,
     title: 'React',
     questions: [
       {
@@ -76,6 +81,7 @@ export const cardStorage = {
     ]
   },
   JavaScript2: {
+    deckId: 6,
     title: 'JavaScript',
     questions: [
       {
@@ -85,6 +91,7 @@ export const cardStorage = {
     ]
   },
   React3: {
+    deckId: 7,
     title: 'React',
     questions: [
       {
@@ -98,6 +105,7 @@ export const cardStorage = {
     ]
   },
   JavaScript3: {
+    deckId: 8,
     title: 'JavaScript',
     questions: [
       {
@@ -107,6 +115,7 @@ export const cardStorage = {
     ]
   },
   React4: {
+    deckId: 9,
     title: 'React',
     questions: [
       {
@@ -120,6 +129,7 @@ export const cardStorage = {
     ]
   },
   JavaScript4: {
+    deckId: 10,
     title: 'JavaScript',
     questions: [
       {

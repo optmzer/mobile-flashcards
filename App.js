@@ -14,12 +14,14 @@ import {
 } from 'react-native'
 import { TabNavigator, StackNavigator } from 'react-navigation'
 import { Constants } from 'expo'
-import FlashCard from './components/FlashCard'
+import { FontAwesome } from '@expo/vector-icons'
 import thunk from 'redux-thunk'
 import reducers from './reducers'
 import Home from './components/Home'
+import FlashCard from './components/FlashCard'
 import AddDeck from './components/AddDeck'
-import { FontAwesome } from '@expo/vector-icons'
+import Deck from './components/Deck'
+import AddCard from './components/AddCard'
 
 console.ignoredYellowBox = ['Remote debugger']
 
@@ -59,14 +61,15 @@ const DeckTabs = TabNavigator({
   },//AddDeck
 }, {
   navigationOptions: {
-    headers: null,
+    header: null,
   },
   tabBarOptions: Platform.OS === 'ios' ?
     {
       // iOS tabBarOptions
       showLabel: true,
-      activeTintColor: "#ffcc00",
-      style: {
+      activeTintColor: "#ffcc00",//Icon color
+      style: {//tab color
+        //backgroundColor: ,
       },
     } : {
       // Android tabBarOptions
@@ -77,6 +80,30 @@ const DeckTabs = TabNavigator({
       },
     },//tabBarOptions
 })//TabNavigator()
+
+const HomeNavigator = StackNavigator({
+  Home: {
+    screen: DeckTabs,
+  }, //Home
+  Deck: {
+    screen: Deck,
+    navigationOptions: {
+      headerTintColor: "#2b94e5",
+      headerStyle: {
+        //backgroundColor: "",
+      }
+    }//navigationOptions
+  }, //Deck
+  AddCard: {
+    screen: AddCard,
+    navigationOptions: {
+      headerTintColor: "#2b94e5",
+      headerStyle: {
+        //backgroundColor: "",
+      }
+    } //navigationOptions
+  } //FlashCard
+})
 
 // <FlashCard />
 
@@ -89,12 +116,12 @@ export default class App extends React.Component {
               backgroundColor={'#fff'}
               barStyle="light-content"
             />
-            <DeckTabs/>
+            <HomeNavigator/>
           </View>
       </Provider>
     )
   }
-}
+}//class App
 
 const styles = StyleSheet.create({
   container: {
@@ -103,4 +130,4 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // justifyContent: 'center',
   },
-});
+})
