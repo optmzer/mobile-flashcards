@@ -12,6 +12,9 @@ Add card,
 Rename Deck title,
 */
 class Deck extends Component{
+
+  //TODO: add deleteDeck(deckId) method.
+
   render(){
 
 const { navigation } = this.props
@@ -43,7 +46,11 @@ const { navigation } = this.props
             <MaterialIcons name="playlist-add" size={30}/>
             <Text>Add Card</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack()
+            }}
+            style={styles.button}>
             <MaterialIcons name="delete-forever" size={30}/>
             <Text>Delete Deck</Text>
           </TouchableOpacity>

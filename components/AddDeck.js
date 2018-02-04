@@ -1,5 +1,7 @@
 /**TODO: Align icons vertically.
-Hook up Save button*/
+Hook up Save button
+key board blocks buttons.
+*/
 
 import React, { Component } from 'react'
 import {
@@ -8,12 +10,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView,
 } from 'react-native'
 import {
-  FontAwesome,
+  MaterialIcons,
 } from "@expo/vector-icons"
 
 class AddDeck extends Component{
+
+  //TODO: when press save go to Deck view.
 
   state = {
     text: ""
@@ -26,38 +31,51 @@ class AddDeck extends Component{
   }
 
   render(){
+
+    // console.log("L33 AddDeck this.props = ", this.props);
+    const { navigation } = this.props
+
     return(
-      <View style={styles.container}>
-        <TextInput
-          placeholder="Deck Title"
-          onChangeText={(text) => this.setState({text})}
-          value={this.state.text}
-          style={styles.deckTitle}
-        />
-        <View style={styles.controls}>
-          <TouchableOpacity
-            style={styles.controlsBtn}
-          >
-            <Text style={{fontSize: 25}}>Save Deck - </Text>
-            <FontAwesome name="save" size={40}/>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.controlsBtn}
-            onPress={() => this.cancelAddDeck()}
-          >
-            <Text style={{fontSize: 25}}>Cancel - </Text>
-            <FontAwesome name="trash-o" size={40}/>
-          </TouchableOpacity>
-        </View>
-      </View>
+        <KeyboardAvoidingView
+          behavior="padding"
+          style={styles.container}
+        >
+          <TextInput
+            placeholder="Deck Title"
+            onChangeText={(text) => this.setState({text})}
+            value={this.state.text}
+            style={styles.deckTitle}
+          />
+          <KeyboardAvoidingView
+            behavior="padding"
+            style={styles.controls}>
+            <TouchableOpacity
+              style={styles.controlsBtn}
+            >
+              <MaterialIcons name="save" size={30}/>
+              <Text>Save</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.controlsBtn}
+              onPress={() => {
+                this.cancelAddDeck()
+                navigation.goBack()
+              }}
+            >
+              <MaterialIcons name="delete-forever" size={30}/>
+              <Text>Cancel</Text>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
     )//return()
   }//render()
 }//class AddDeck
 
 
 const styles = StyleSheet.create({
-  continer: {
+  container: {
     flex: 1,
+    justifyContent: "space-between",
   },//container
   deckTitle: {
     paddingTop: 20,
@@ -65,11 +83,12 @@ const styles = StyleSheet.create({
     height: 60
   },//deckTitle
   controls: {
-    paddingTop: 40,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 20,
   },//controls
   controlsBtn: {
-    paddingLeft: 40,
-    flexDirection: "row",
+    alignItems: "center",
   },//controlsBtn
 })
 

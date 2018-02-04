@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {
-  Text,
   View,
+  Text,
+  KeyboardAvoidingView,
   TouchableOpacity,
   StyleSheet,
   TextInput,
@@ -28,7 +29,10 @@ class AddCard extends Component{
     const { navigation } = this.props
 
     return(
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={styles.container}
+      >
         <Text>{"\n"}</Text>
         <TextInput
           placeholder="Question"
@@ -42,26 +46,32 @@ class AddCard extends Component{
           value={this.state.text}
           style={styles.cardInput}
         />
-        <View style={styles.controls}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
+        <KeyboardAvoidingView
+          behavior="padding"
+          style={styles.controls}
         >
-          <FontAwesome name="home" size={40}/>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Home")}
+          >
+          <FontAwesome name="home" size={30}/>
             <Text>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity>
-            <FontAwesome name="save" size={40}/>
+            <FontAwesome name="save" size={30}/>
             <Text>Submit</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.controlsBtn}
-            onPress={() => this.cancelAddCard()}
+            onPress={() => {
+              this.cancelAddCard()
+              navigation.goBack()
+            }}
           >
-          <FontAwesome name="trash-o" size={40}/>
+          <FontAwesome name="trash-o" size={30}/>
             <Text>Cancel</Text>
           </TouchableOpacity>
-        </View>
-      </View>
+        </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
     )//return()
   }//render()
 }//class AddCard
@@ -69,12 +79,14 @@ class AddCard extends Component{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "space-between",
   },
   controls: {
-
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 20,
   },
   cardInpur: {
-    height: 150,
   },
 })//styles
 
