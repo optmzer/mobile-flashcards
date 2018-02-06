@@ -15,11 +15,16 @@ import {
 import {
   MaterialIcons,
 } from "@expo/vector-icons"
+import { addNewDeckAction } from '../actions'
+import { connect } from 'react-redux'
 
 class AddDeck extends Component{
 
-  //TODO: when press save go to Deck view.
+  /**TODO: when press save go to Deck view.
+  Also need to issue an action to update Home.
+  as AsyncStorage seem to be updating OK.
 
+*/
   state = {
     text: ""
   }
@@ -28,6 +33,13 @@ class AddDeck extends Component{
     this.setState({
       text: ""
     })
+  }
+
+  saveDeck(){
+    const { navigation, dispatch } = this.props
+    console.log("L36 AddDeck this.state.text = ", this.state.text )
+    dispatch(addNewDeckAction(this.state.text))
+    navigation.goBack()
   }
 
   render(){
@@ -51,6 +63,7 @@ class AddDeck extends Component{
             style={styles.controls}>
             <TouchableOpacity
               style={styles.controlsBtn}
+              onPress={() => this.saveDeck()}
             >
               <MaterialIcons name="save" size={30}/>
               <Text>Save</Text>
@@ -78,7 +91,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },//container
   deckTitle: {
-    paddingTop: 20,
+    marginTop: 30,
     fontSize: 25,
     height: 60
   },//deckTitle
@@ -92,4 +105,4 @@ const styles = StyleSheet.create({
   },//controlsBtn
 })
 
-export default AddDeck
+export default connect()(AddDeck)

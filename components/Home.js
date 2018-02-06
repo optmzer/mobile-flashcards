@@ -5,13 +5,23 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  AsyncStorage,
 } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
-import { cardStorage, convertObjectToArray } from '../utils/helpers'
+import { getAllDecks, convertObjectToArray, setTestData } from '../utils/helpers'
+import {FLASH_CARD_STORAGE_KEY} from '../utils/api'
+import * as Action from '../actions'
+import { connect } from 'react-redux'
 
 class Home extends Component {
+
+  componentWillMount(){
+    setTestData()
+    this.props.dispatch(Action.getAllDecksAction())
+  }//componentWillMount()
+
   _keyExtractor = (item, index) => {
-    return (item.title + index)
+    return (item.deckId)
   }
 
   _renderItem = ({item}) => {
@@ -42,15 +52,26 @@ class Home extends Component {
 
   render(){
 
-    let listData = convertObjectToArray(cardStorage)
-    // console.log("L32 Home listData = ", listData)
+    // console.log("L79 Home this.state = ", this.state)
+    // console.log("L80 Home this.props = ", this.props)
+
+    const { decks } = this.props.getAllDecksReducer
+
     return(
       <View style={styles.continer}>
-        <FlatList
-          data={listData}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderItem}
-        />
+        { decks
+          ?
+           <FlatList
+            data={decks}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderItem}
+          />
+          :
+          <View>
+            <Text>The list is empty</Text>
+            <Text>Add more cards</Text>
+          </View>
+        }
       </View>
     )//return()
   }//render()
@@ -66,5 +87,11 @@ const styles = StyleSheet.create({
   }
 })
 
+function mapStateToProps(state){
+  const { getAllDecksReducer } = state
+  return {
+    getAllDecksReducer,
+  }
+}
 
-export default Home
+export default connect(mapStateToProps)(Home)

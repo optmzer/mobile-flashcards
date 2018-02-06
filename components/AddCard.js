@@ -33,15 +33,15 @@ class AddCard extends Component{
         behavior="padding"
         style={styles.container}
       >
-        <Text>{"\n"}</Text>
         <TextInput
           placeholder="Question"
           onChangeText={(question) => this.setState({question})}
           value={this.state.text}
-          style={styles.cardInput}
+          style={[styles.cardInput, {marginTop: 30}]}
         />
         <TextInput
           placeholder="Answer"
+
           onChangeText={(answer) => this.setState({answer})}
           value={this.state.text}
           style={styles.cardInput}
@@ -86,7 +86,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginBottom: 20,
   },
-  cardInpur: {
+  cardInput: {
+    fontSize: 25,
+    height: 60,
   },
 })//styles
 
