@@ -6,6 +6,8 @@ import {
   StyleSheet,
 } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import { connect } from 'react-redux'
+import { getDeckAction } from '../actions'
 
 /**TODO: Add TabDrawer to edit deck ???
 Add card,
@@ -14,10 +16,18 @@ Rename Deck title,
 class Deck extends Component{
 
   //TODO: add deleteDeck(deckId) method.
+  // componentWillReceiveNewProps(){
+  //
+  // }
+componentDidMount(){
+  const { navigation, dispatch } = this.props
+
+  dispatch(getDeckAction(navigation.state.params.deckId))
+}
 
   render(){
 
-const { navigation } = this.props
+    const { navigation } = this.props
     return(
       <View style={styles.container}>
         { navigation.state.params &&
@@ -79,4 +89,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Deck
+export default connect()(Deck)

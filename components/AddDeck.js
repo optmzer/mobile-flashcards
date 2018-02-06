@@ -15,7 +15,10 @@ import {
 import {
   MaterialIcons,
 } from "@expo/vector-icons"
-import { addNewDeckAction } from '../actions'
+import {
+  addNewDeckAction,
+  getDeckAction
+} from '../actions'
 import { connect } from 'react-redux'
 
 class AddDeck extends Component{
@@ -23,24 +26,38 @@ class AddDeck extends Component{
   /**TODO: when press save go to Deck view.
   Also need to issue an action to update Home.
   as AsyncStorage seem to be updating OK.
+  */
 
-*/
   state = {
     text: ""
   }
 
   cancelAddDeck(){
     this.setState({
-      text: ""
+      text: "",
+      disabled: true
     })
   }
 
+  setText(text){
+    this.setState({
+      text: text,
+      disabled: false
+    })
+  }//setText()
+
   saveDeck(){
     const { navigation, dispatch } = this.props
-    console.log("L36 AddDeck this.state.text = ", this.state.text )
-    dispatch(addNewDeckAction(this.state.text))
-    navigation.goBack()
-  }
+    let deck = {
+      deckId: Date.now() + "#!" + this.state.text,
+      title: this.state.text,
+      questions: []
+    }
+    dispatch(addNewDeckAction(deck))
+
+    //TODO: this reads AsyncStorage before deck is written into it.
+    navigation.navigate("Deck", {deckId: deck.deckId})
+  }//saveDeck()
 
   render(){
 
@@ -54,7 +71,7 @@ class AddDeck extends Component{
         >
           <TextInput
             placeholder="Deck Title"
-            onChangeText={(text) => this.setState({text})}
+            onChangeText={(text) => this.setText(text)}
             value={this.state.text}
             style={styles.deckTitle}
           />
@@ -62,6 +79,7 @@ class AddDeck extends Component{
             behavior="padding"
             style={styles.controls}>
             <TouchableOpacity
+              disabled={!this.state.text ? true : false}
               style={styles.controlsBtn}
               onPress={() => this.saveDeck()}
             >
