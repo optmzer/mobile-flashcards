@@ -70,7 +70,7 @@ class AddDeck extends Component{
     const { navigation } = this.props
     const { disabled } = this.state
 
-    console.log("L71 AddDeck this.textInput = ", this.textInput)
+    // console.log("L71 AddDeck this.textInput = ", this.textInput)
 
     // ref={input => this.textInput = input}
     return(

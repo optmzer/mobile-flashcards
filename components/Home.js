@@ -16,19 +16,21 @@ import { connect } from 'react-redux'
 class Home extends Component {
 
   componentWillMount(){
-    // setTestData() run only once on every Expo App reload.
+    // setTestData() //run only once on every Expo App reload.
     this.props.dispatch(Action.getAllDecksAction())
   }//componentWillMount()
 
   _keyExtractor = (item, index) => {
+    console.log("L28 Home item.deckId = ", item.deckId)
     return (item.deckId)
   }
 
   _renderItem = ({item}) => {
+    console.log("L28 Home item = ", item)
     return (
       <View style={styles.deckListItem}>
         {
-          item
+          item.title
           ?
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('Deck', {deck: item})}

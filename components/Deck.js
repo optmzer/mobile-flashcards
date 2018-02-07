@@ -7,7 +7,10 @@ import {
 } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
-import { getDeckAction } from '../actions'
+import {
+  getDeckAction,
+  deleteDeckAction,
+} from '../actions'
 
 /**TODO: Add TabDrawer to edit deck ???
 Add card,
@@ -19,9 +22,14 @@ class Deck extends Component{
   // componentWillReceiveNewProps(){
   //
   // }
+
+deleteDeck(){
+  const { navigation, dispatch } = this.props
+  dispatch(deleteDeckAction(navigation.state.params.deck.deckId))
+}
+
 componentDidMount(){
   const { navigation, dispatch } = this.props
-
   dispatch(getDeckAction(navigation.state.params.deck.deckId))
 }
 
@@ -29,7 +37,7 @@ componentDidMount(){
 
     const { navigation, getDeckReducer } = this.props
     const { deck } = this.props.navigation.state.params
-    console.log("L32 Deck getDeckReducer.deck = ", getDeckReducer)
+    console.log("L32 Deck getDeckReducer = ", getDeckReducer)
 
     return(
       <View style={styles.container}>
@@ -65,6 +73,7 @@ componentDidMount(){
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
+              this.deleteDeck()
               navigation.goBack()
             }}
             style={styles.button}>
@@ -99,7 +108,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state){
   const { getDeckReducer } = state
   return{
-    getDeckReducer,
+    getDeckReducer: getDeckReducer,
   }
 }
 

@@ -41,11 +41,11 @@ export function getDeckAction(deckId){
         if(decks){
           let data = convertObjectToArray(JSON.parse(decks))
           let deck = data.filter((item, index) => {
-            console.log("L44 deck_actions" + item.deckId + " ===  deckId" + deckId +" = ", item.deckId === deckId)
+            // console.log("L44 deck_actions" + item.deckId + " ===  deckId" + deckId +" = ", item.deckId === deckId)
               if(item.deckId === deckId){
                 return true
               }
-          })
+            })
           return dispatch(getDeck(deck))
         }
       }
@@ -54,20 +54,54 @@ export function getDeckAction(deckId){
 }//getDeckAction()
 
 function getDeck(deck){
-  console.log("L57 deck_actions getDeck = ", deck)
-
+  // console.log("L57 deck_actions getDeck = ", deck)
   return {
     type: TYPES.GET_DECK,
     deck: deck,
   }
-}
+}//getDeck()
 
 export function deleteDeckAction(deckId){
+  return function(dispatch){
+    AsyncStorage.getItem(
+      FLASH_CARD_STORAGE_KEY,
+      (err, decks) => {
+        if(err){
+          console.error("L70 deck_actions Error geting Item from AsyncStorage.", err)
+        }
+        if(decks){
+          let data = JSON.parse(decks)
+          // for(var key in newDecks){
+          //   console.log("L75 deleteDeckAction newDecks[key] = ", newDecks[key])
+          //   if(newDecks[key].deckId === deckId){
+          //     newDecks[key] = null
+          //   }
+          // }
+          //Make new object without deck containing deckId
+          let newDecks = {}
+          Object.keys(data).map((key, index) => {
+            if(data[key].deckId !== deckId){
+              newDecks[key] = data[key]
+            }
+          })
+          console.log("L86 deleteDeckAction newDecks = ", newDecks)
+          AsyncStorage.setItem(
+            FLASH_CARD_STORAGE_KEY,
+            JSON.stringify(newDecks),
+            (err) => err ? console.error("L83 deleteDeckAction Error writing into AsyncStorage = ", err) : null
+          )
+          return dispatch(getAllDecksAction())
+        }
+      }
+    )
+  }
+}//deleteDeckAction()
+
+function deleteDeck(){
   return {
     type: TYPES.DELETE_DECK,
-    deckId: deckId,
   }
-}
+}//deleteDeck()
 
 export function addNewDeckAction(deck){
   // console.log("L47 addNewDeckAction deck = ", deck)
