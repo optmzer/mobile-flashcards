@@ -22,21 +22,28 @@ class Deck extends Component{
 componentDidMount(){
   const { navigation, dispatch } = this.props
 
-  dispatch(getDeckAction(navigation.state.params.deckId))
+  dispatch(getDeckAction(navigation.state.params.deck.deckId))
 }
 
   render(){
 
-    const { navigation } = this.props
+    const { navigation, getDeckReducer } = this.props
+    const { deck } = this.props.navigation.state.params
+    console.log("L32 Deck getDeckReducer.deck = ", getDeckReducer)
+
     return(
       <View style={styles.container}>
         { navigation.state.params &&
           <Text style={styles.containerText}>
-          deckId: {navigation.state.params.deckId}
+          deckId: {navigation.state.params.deck.deckId}
           </Text>
         }
-        <Text style={styles.containerText}>Title: </Text>
-        <Text style={styles.containerText}>Cards: </Text>
+        <Text style={styles.containerText}>
+          Title: {navigation.state.params.deck.title}
+        </Text>
+        <Text style={styles.containerText}>
+          Cards: {navigation.state.params.deck.questions.length}
+        </Text>
         <View style={styles.controls}>
           <TouchableOpacity
             style={styles.button}
@@ -89,4 +96,11 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect()(Deck)
+function mapStateToProps(state){
+  const { getDeckReducer } = state
+  return{
+    getDeckReducer,
+  }
+}
+
+export default connect(mapStateToProps)(Deck)

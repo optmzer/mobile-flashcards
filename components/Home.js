@@ -16,7 +16,7 @@ import { connect } from 'react-redux'
 class Home extends Component {
 
   componentWillMount(){
-    setTestData()
+    // setTestData() run only once on every Expo App reload.
     this.props.dispatch(Action.getAllDecksAction())
   }//componentWillMount()
 
@@ -31,7 +31,7 @@ class Home extends Component {
           item
           ?
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Deck', {deckId: item.deckId})}
+              onPress={() => this.props.navigation.navigate('Deck', {deck: item})}
             >
               <View>
                 <Text>Title: {item.title}</Text>

@@ -41,6 +41,7 @@ export function getDeckAction(deckId){
         if(decks){
           let data = convertObjectToArray(JSON.parse(decks))
           let deck = data.filter((item, index) => {
+            console.log("L44 deck_actions" + item.deckId + " ===  deckId" + deckId +" = ", item.deckId === deckId)
               if(item.deckId === deckId){
                 return true
               }

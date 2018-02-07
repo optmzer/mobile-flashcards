@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native'
 import {
   MaterialIcons,
@@ -28,21 +29,24 @@ class AddDeck extends Component{
   as AsyncStorage seem to be updating OK.
   */
 
+  // textInput = null
+
   state = {
-    text: ""
+    text: "",
+    disabled: true,
   }
 
   cancelAddDeck(){
     this.setState({
       text: "",
-      disabled: true
+      disabled: true,
     })
   }
 
   setText(text){
     this.setState({
       text: text,
-      disabled: false
+      disabled: false,
     })
   }//setText()
 
@@ -53,17 +57,22 @@ class AddDeck extends Component{
       title: this.state.text,
       questions: []
     }
+    Keyboard.dismiss()//Dismiss Keyboard on submit.
     dispatch(addNewDeckAction(deck))
 
     //TODO: this reads AsyncStorage before deck is written into it.
-    navigation.navigate("Deck", {deckId: deck.deckId})
+    navigation.navigate("Deck", {deck: deck})
+    this.cancelAddDeck()
   }//saveDeck()
 
   render(){
 
-    // console.log("L33 AddDeck this.props = ", this.props);
     const { navigation } = this.props
+    const { disabled } = this.state
 
+    console.log("L71 AddDeck this.textInput = ", this.textInput)
+
+    // ref={input => this.textInput = input}
     return(
         <KeyboardAvoidingView
           behavior="padding"
@@ -121,6 +130,10 @@ const styles = StyleSheet.create({
   controlsBtn: {
     alignItems: "center",
   },//controlsBtn
+  // contorlDisabled: {
+  //   alignItems: "center",
+  //   opacity: 0.5,
+  // }
 })
 
 export default connect()(AddDeck)
