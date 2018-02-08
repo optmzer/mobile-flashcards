@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
 } from 'react-native'
 import {
   getDeckAction,
@@ -34,17 +35,54 @@ componentDidMount(){
   // dispatch(getDeckAction(navigation.state.params.deck.deckId))
 }
 
+getCard(card){
+  const { navigation, dispatch } = this.props
+  navigation.navigate("FlashCard", {card: card})
+}
+
+_keyExtractor = (item, index) => {
+  return index
+}//_keyExtractor()
+
+_renderItem = ({item}) => {
+
+  const { navigation, dispatch } = this.props
+
+  return (
+    <View>
+      {
+        !item.length
+        ?
+        <TouchableOpacity
+          onPress={() => this.getCard(item)}
+        >
+          <View>
+            <Text style={styles.questionList}>Q: {item.question}</Text>
+          </View>
+        </TouchableOpacity>
+        :
+        <View>
+          <Text style={styles.containerText}>This deck has 0 cards to display.</Text>
+          <Text style={styles.containerText}>Add more cards.</Text>
+        </View>
+      }
+    </View>
+  )
+}//_renderItem()
+
+
   render(){
 
     const { navigation, getDeckReducer } = this.props
     // const { deck } = this.props.navigation.state.params
     console.log("L40 Deck getDeckReducer = ", getDeckReducer)
-    let deckId = 0, title = "", numbOfCards = 0
+    let deckId = 0, title = "", numbOfCards = 0, cards = []
 
     if(!_.isEmpty(getDeckReducer.deck)){//if not empty
       deckId = getDeckReducer.deck.deckId
       title = getDeckReducer.deck.title
       numbOfCards = getDeckReducer.deck.questions.length
+      cards = getDeckReducer.deck.questions
     }
     return(
       <View style={styles.container}>
@@ -55,10 +93,13 @@ componentDidMount(){
         }
         <Text style={styles.containerText}>
           Title: {title}
-        </Text>
-        <Text style={styles.containerText}>
           Cards: {numbOfCards}
         </Text>
+        <FlatList
+          data={cards}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderItem}
+         />
         <View style={styles.controls}>
           <TouchableOpacity
             style={styles.button}
@@ -109,7 +150,13 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-  }
+  },
+  questionList: {
+    fontSize: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+  },
 })
 
 function mapStateToProps(state){

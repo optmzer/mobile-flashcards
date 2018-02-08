@@ -51,7 +51,7 @@ class Home extends Component {
           :
             <View>
               <Text>The list is empty</Text>
-              <Text>Add more cards</Text>
+              <Text>Add more decks</Text>
             </View>
         }
       </View>
@@ -77,7 +77,7 @@ class Home extends Component {
           :
           <View>
             <Text>The list is empty</Text>
-            <Text>Add more cards</Text>
+            <Text>Add more decks</Text>
           </View>
         }
       </View>

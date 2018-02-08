@@ -39,19 +39,15 @@ export function getDeckAction(deckId){
           console.error("L19 deck_actions Error geting Item from AsyncStorage.", err)
         }
         if(decks){
-          let data = convertObjectToArray(JSON.parse(decks))
-          // let deck = data.filter((item, index) => {
-          //   // console.log("L44 deck_actions" + item.deckId + " ===  deckId" + deckId +" = ", item.deckId === deckId)
-          //     if(item.deckId === deckId){
-          //       return true
-          //     }
-          //   })
+          let data = JSON.parse(decks)
           let deck = {}
+          //Find matching Deck by deckId
           Object.keys(data).map((key, index) =>{
             if(data[key].deckId === deckId){
               deck = data[key]
             }
           })
+          //dispatch Deck
           return dispatch(getDeck(deck))
         }
       }
@@ -116,18 +112,18 @@ export function addNewDeckAction(deck){
         if (err) { //show errors if any
           return console.error("L74 addNewDeckAction. Cannot add new Deck ", err)
         }
-        //Add deck to object
+        //Add deck to an object
         let newDecks = JSON.parse(decks)
-        newDecks[deck.title] = deck //Creates an Error. Cannot find deckId
+        newDecks[deck.title] = deck
         // console.log("L82 addNewDeckAction = ", newDecks)
         //Write into AsyncStorage
         AsyncStorage.setItem(
           FLASH_CARD_STORAGE_KEY,
-        JSON.stringify(newDecks),
-        (err) => err ? console.error("L84 addNewDeckAction error writing Deck to storage", err) : null
+          JSON.stringify(newDecks),
+          (err) => err ? console.error("L84 addNewDeckAction error writing Deck to storage", err) : null
         )
-        return dispatch(getDeck(deck))
-      }) //Do stuff with data.
+      return dispatch(getDeck(deck))
+    }) //Do stuff with data.
   }
 }
 

@@ -102,7 +102,16 @@ const HomeNavigator = StackNavigator({
         //backgroundColor: "",
       }
     } //navigationOptions
-  } //FlashCard
+  },//AddCard
+  FlashCard: {
+    screen: FlashCard,
+    navigationOptions: {
+      headerTintColor: "#2b94e5",
+      headerStyle: {
+        //backgroundColor: "",
+      }
+    } //navigationOptions
+  }, //FlashCard
 })
 
 // <FlashCard />

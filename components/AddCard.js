@@ -41,9 +41,7 @@ class AddCard extends Component{
     }
 
     dispatch(saveCardAction(deckId, card))
-    // dispatch(getDeckAction(deckId))
     this.clearTextInput()//clear the text input
-    // navigation.navigate("AddCard", {deckId: deckId})
     navigation.goBack()
   }
 

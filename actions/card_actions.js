@@ -14,7 +14,12 @@ export function getCardAction(cardId){
 }
 
 export function saveCardAction(deckId, card){
-  console.log("L16 card_actions deckId= "+deckId+", card=", card)
+  // console.log("L16 card_actions deckId= "+deckId+", card=", card)
+  let newCard = {
+      qId: Date.now(),
+      question: card.question,
+      answer: card.answer,
+  }
   return function(dispatch){
     //Get the Decks
     AsyncStorage.getItem(
@@ -29,10 +34,11 @@ export function saveCardAction(deckId, card){
           Object.keys(data).map(key => {
             //If deckId match add question
             if(data[key].deckId === deckId){
-              data[key].questions.push(card)
+              data[key].questions.push(newCard)
             }
           })
           //Write into AsyncStorage
+          console.log("L40 saveCardAction data", data)
           AsyncStorage.mergeItem(
             FLASH_CARD_STORAGE_KEY,
             JSON.stringify(data),

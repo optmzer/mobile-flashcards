@@ -12,9 +12,11 @@ import {
   FontAwesome,
   MaterialIcons,
 } from "@expo/vector-icons"
-import * as API from '../utils/api'
-import { setTestData } from '../utils/helpers'
+// import { setTestData } from '../utils/helpers'
 import {getAllDecksAction, getCardAction} from '../actions'
+
+//TODO: make cardId so FlashCard can get card from the store.
+//I can use Date.now() for this simple program as I can only make 1 card at a time.
 
 class FlashCard extends Component{
 
@@ -25,23 +27,12 @@ class FlashCard extends Component{
   }
 
   componentWillMount(){
-    this.getCard("React")
+    const { navigation } = this.props
+    this.setState({
+      card: navigation.state.params.card
+    })
   }//componentWillMount()
 
-  getCard(cardId){
-    const { dispatch } = this.props
-
-    API.getAllDecks()
-    .then(result => {
-      decks = JSON.parse(result)
-      if(decks.hasOwnProperty(cardId)){
-        dispatch(getCardAction(decks[cardId]))
-        this.setState({
-          card: decks[cardId]
-        })
-      }
-    })
-  }
 
   getNextCard(){
     //TODO: returns next card in the Deck
@@ -73,7 +64,7 @@ class FlashCard extends Component{
   }
 
   render(){
-    setTestData()
+    // setTestData()
     const { front_editable, back_editable, card } = this.state
     console.log("L53 FlashCard this.props = ", this.props)
     console.log("L54 FlashCard this.state = ", this.state)
@@ -119,13 +110,13 @@ class FlashCard extends Component{
         <Text>{"\n"}</Text>
         <View style={styles.cardNavigation}>
           <TouchableOpacity>
-            <MaterialIcons name="arrow-back" size={35}/>
+            <MaterialIcons name="arrow-back" size={30}/>
           </TouchableOpacity>
           <TouchableOpacity>
             <Text style={{fontSize: 25}}>Hint</Text>
           </TouchableOpacity>
           <TouchableOpacity>
-            <MaterialIcons name="arrow-forward" size={35}/>
+            <MaterialIcons name="arrow-forward" size={30}/>
           </TouchableOpacity>
         </View>
 
@@ -138,6 +129,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: "space-between",
   },
   deck_title: {
     flexDirection: "row",
@@ -151,8 +143,7 @@ const styles = StyleSheet.create({
   text_input: {
     //get rid of bottom border
     //set min height
-    height: 200,
-    maxHeight: 200,
+    // maxHeight: 200,
     borderBottomWidth: 0,
     fontSize: 24,
   },
@@ -181,6 +172,7 @@ const styles = StyleSheet.create({
     //align inline
     flexDirection: "row",
     justifyContent: "space-around",
+    paddingBottom: 20,
   }
 })
 
