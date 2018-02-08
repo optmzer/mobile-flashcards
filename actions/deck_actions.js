@@ -46,7 +46,7 @@ export function getDeckAction(deckId){
                 return true
               }
             })
-          return dispatch(getDeck(deck))
+          return dispatch(getDeck(deck[0]))
         }
       }
     )
@@ -71,12 +71,7 @@ export function deleteDeckAction(deckId){
         }
         if(decks){
           let data = JSON.parse(decks)
-          // for(var key in newDecks){
-          //   console.log("L75 deleteDeckAction newDecks[key] = ", newDecks[key])
-          //   if(newDecks[key].deckId === deckId){
-          //     newDecks[key] = null
-          //   }
-          // }
+
           //Make new object without deck containing deckId
           let newDecks = {}
           Object.keys(data).map((key, index) => {
@@ -84,12 +79,14 @@ export function deleteDeckAction(deckId){
               newDecks[key] = data[key]
             }
           })
-          console.log("L86 deleteDeckAction newDecks = ", newDecks)
+
+          //Write new object into AsyncStorage
           AsyncStorage.setItem(
             FLASH_CARD_STORAGE_KEY,
             JSON.stringify(newDecks),
             (err) => err ? console.error("L83 deleteDeckAction Error writing into AsyncStorage = ", err) : null
           )
+          //Rerender Home element
           return dispatch(getAllDecksAction())
         }
       }

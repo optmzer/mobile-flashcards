@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
+import { connect } from 'react-redux'
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import * as _ from 'underscore'
 import {
   Text,
   View,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native'
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
-import { connect } from 'react-redux'
 import {
   getDeckAction,
   deleteDeckAction,
@@ -36,28 +37,34 @@ componentDidMount(){
   render(){
 
     const { navigation, getDeckReducer } = this.props
-    const { deck } = this.props.navigation.state.params
-    console.log("L32 Deck getDeckReducer = ", getDeckReducer)
+    // const { deck } = this.props.navigation.state.params
+    console.log("L40 Deck getDeckReducer = ", getDeckReducer)
+    let deckId = 0, title = "", numbOfCards = 0
 
+    if(!_.isEmpty(getDeckReducer)){//if not empty
+      deckId = getDeckReducer.deck.deckId
+      title = getDeckReducer.deck.title
+      numbOfCards = getDeckReducer.deck.questions.length
+    }
     return(
       <View style={styles.container}>
-        { navigation.state.params &&
+        { !_.isEmpty(getDeckReducer) &&
           <Text style={styles.containerText}>
-          deckId: {navigation.state.params.deck.deckId}
+            deckId: {deckId}
           </Text>
         }
         <Text style={styles.containerText}>
-          Title: {navigation.state.params.deck.title}
+          Title: {title}
         </Text>
         <Text style={styles.containerText}>
-          Cards: {navigation.state.params.deck.questions.length}
+          Cards: {numbOfCards}
         </Text>
         <View style={styles.controls}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("Home")}
           >
-            <MaterialIcons name="arrow-back" size={30}/>
+            <FontAwesome name="home" size={30}/>
             <Text>Return</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}>
@@ -66,7 +73,7 @@ componentDidMount(){
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("AddCard")}
+            onPress={() => navigation.navigate("AddCard", {deckId: deckId})}
           >
             <MaterialIcons name="playlist-add" size={30}/>
             <Text>Add Card</Text>

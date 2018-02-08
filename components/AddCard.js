@@ -8,6 +8,11 @@ import {
   TextInput,
 } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import { connect } from 'react-redux'
+import {
+  saveCardAction,
+  getDeckAction,
+} from '../actions'
 
 //TODO: make TextInput multiliners.
 
@@ -18,32 +23,51 @@ class AddCard extends Component{
     answer: "",
   }
 
-  cancelAddCard(){
+  clearTextInput(){
     this.setState({
       question: "",
       answer: "",
     })
   }
 
+  saveCard(){
+    const { navigation } = this.props
+    const {deckId} = this.props.navigation.state.params
+    const { dispatch } = this.props
+
+    let card = {
+      question: this.state.question,
+      answer: this.state.answer
+    }
+
+    dispatch(saveCardAction(deckId, card))
+    // dispatch(getDeckAction(deckId))
+    this.clearTextInput()//clear the text input
+    // navigation.navigate("AddCard", {deckId: deckId})
+    navigation.goBack()
+  }
+
   render(){
     const { navigation } = this.props
+    const {deckId} = this.props.navigation.state.params
+    // console.log("L38 AddCard navigation.state.params = ",navigation.state.params)
 
     return(
       <KeyboardAvoidingView
         behavior="padding"
         style={styles.container}
       >
+        <Text>Deck Id : {deckId && deckId}</Text>
         <TextInput
           placeholder="Question"
           onChangeText={(question) => this.setState({question})}
-          value={this.state.text}
+          value={this.state.question}
           style={[styles.cardInput, {marginTop: 30}]}
         />
         <TextInput
           placeholder="Answer"
-
           onChangeText={(answer) => this.setState({answer})}
-          value={this.state.text}
+          value={this.state.answer}
           style={styles.cardInput}
         />
         <KeyboardAvoidingView
@@ -51,23 +75,27 @@ class AddCard extends Component{
           style={styles.controls}
         >
           <TouchableOpacity
+            style={styles.controlsBtn}
             onPress={() => navigation.navigate("Home")}
           >
           <FontAwesome name="home" size={30}/>
             <Text>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            style={styles.controlsBtn}
+            onPress={() => this.saveCard()}
+          >
             <FontAwesome name="save" size={30}/>
             <Text>Submit</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.controlsBtn}
             onPress={() => {
-              this.cancelAddCard()
+              this.clearTextInput()
               navigation.goBack()
             }}
           >
-          <FontAwesome name="trash-o" size={30}/>
+          <FontAwesome name="close" size={30}/>
             <Text>Cancel</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -90,6 +118,9 @@ const styles = StyleSheet.create({
     fontSize: 25,
     height: 60,
   },
+  controlsBtn: {
+    alignItems: "center",
+  }
 })//styles
 
-export default AddCard
+export default connect()(AddCard)

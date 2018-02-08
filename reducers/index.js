@@ -42,4 +42,5 @@ function getCardReducer(state, action){
 export default combineReducers({
   getAllDecksReducer,
   getCardReducer,
+  getDeckReducer,
 })

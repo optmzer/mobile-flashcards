@@ -21,19 +21,25 @@ class Home extends Component {
   }//componentWillMount()
 
   _keyExtractor = (item, index) => {
-    console.log("L28 Home item.deckId = ", item.deckId)
+    // console.log("L24 Home item.deckId = ", item.deckId)
     return (item.deckId)
   }
 
   _renderItem = ({item}) => {
-    console.log("L28 Home item = ", item)
+    // console.log("L29 Home item = ", item)
+    const { dispatch } = this.props
+    
     return (
+
       <View style={styles.deckListItem}>
         {
           item.title
           ?
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Deck', {deck: item})}
+              onPress={() => {
+                dispatch(Action.getDeckAction(item.deckId))
+                this.props.navigation.navigate('Deck', {deck: item})}
+              }
             >
               <View>
                 <Text>Title: {item.title}</Text>
