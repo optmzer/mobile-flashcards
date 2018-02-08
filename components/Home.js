@@ -28,7 +28,7 @@ class Home extends Component {
   _renderItem = ({item}) => {
     // console.log("L29 Home item = ", item)
     const { dispatch } = this.props
-    
+
     return (
 
       <View style={styles.deckListItem}>
@@ -38,7 +38,7 @@ class Home extends Component {
             <TouchableOpacity
               onPress={() => {
                 dispatch(Action.getDeckAction(item.deckId))
-                this.props.navigation.navigate('Deck', {deck: item})}
+                this.props.navigation.navigate('Deck')}
               }
             >
               <View>

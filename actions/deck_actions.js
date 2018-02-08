@@ -40,13 +40,19 @@ export function getDeckAction(deckId){
         }
         if(decks){
           let data = convertObjectToArray(JSON.parse(decks))
-          let deck = data.filter((item, index) => {
-            // console.log("L44 deck_actions" + item.deckId + " ===  deckId" + deckId +" = ", item.deckId === deckId)
-              if(item.deckId === deckId){
-                return true
-              }
-            })
-          return dispatch(getDeck(deck[0]))
+          // let deck = data.filter((item, index) => {
+          //   // console.log("L44 deck_actions" + item.deckId + " ===  deckId" + deckId +" = ", item.deckId === deckId)
+          //     if(item.deckId === deckId){
+          //       return true
+          //     }
+          //   })
+          let deck = {}
+          Object.keys(data).map((key, index) =>{
+            if(data[key].deckId === deckId){
+              deck = data[key]
+            }
+          })
+          return dispatch(getDeck(deck))
         }
       }
     )
@@ -120,7 +126,7 @@ export function addNewDeckAction(deck){
         JSON.stringify(newDecks),
         (err) => err ? console.error("L84 addNewDeckAction error writing Deck to storage", err) : null
         )
-        return dispatch(getAllDecksAction())
+        return dispatch(getDeck(deck))
       }) //Do stuff with data.
   }
 }

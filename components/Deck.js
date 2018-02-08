@@ -25,13 +25,13 @@ class Deck extends Component{
   // }
 
 deleteDeck(){
-  const { navigation, dispatch } = this.props
-  dispatch(deleteDeckAction(navigation.state.params.deck.deckId))
+  const { getDeckReducer, dispatch } = this.props
+  dispatch(deleteDeckAction(getDeckReducer.deck.deckId))
 }
 
 componentDidMount(){
   const { navigation, dispatch } = this.props
-  dispatch(getDeckAction(navigation.state.params.deck.deckId))
+  // dispatch(getDeckAction(navigation.state.params.deck.deckId))
 }
 
   render(){
@@ -41,7 +41,7 @@ componentDidMount(){
     console.log("L40 Deck getDeckReducer = ", getDeckReducer)
     let deckId = 0, title = "", numbOfCards = 0
 
-    if(!_.isEmpty(getDeckReducer)){//if not empty
+    if(!_.isEmpty(getDeckReducer.deck)){//if not empty
       deckId = getDeckReducer.deck.deckId
       title = getDeckReducer.deck.title
       numbOfCards = getDeckReducer.deck.questions.length
