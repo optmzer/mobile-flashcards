@@ -84,7 +84,7 @@ class AddCard extends Component{
             onPress={() => this.saveCard()}
           >
             <FontAwesome name="save" size={30}/>
-            <Text>Submit</Text>
+            <Text>Save</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.controlsBtn}

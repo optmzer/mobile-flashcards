@@ -24,13 +24,6 @@ import { connect } from 'react-redux'
 
 class AddDeck extends Component{
 
-  /**TODO: when press save go to Deck view.
-  Also need to issue an action to update Home.
-  as AsyncStorage seem to be updating OK.
-  */
-
-  // textInput = null
-
   state = {
     text: "",
     disabled: true,
@@ -60,7 +53,6 @@ class AddDeck extends Component{
     Keyboard.dismiss()//Dismiss Keyboard on submit.
     dispatch(addNewDeckAction(deck))
 
-    //TODO: this reads AsyncStorage before deck is written into it.
     navigation.navigate("Deck", {deck: deck})
     this.cancelAddDeck()
   }//saveDeck()
@@ -72,7 +64,6 @@ class AddDeck extends Component{
 
     // console.log("L71 AddDeck this.textInput = ", this.textInput)
 
-    // ref={input => this.textInput = input}
     return(
         <KeyboardAvoidingView
           behavior="padding"

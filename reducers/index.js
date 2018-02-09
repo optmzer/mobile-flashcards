@@ -28,16 +28,19 @@ function getDeckReducer(state, action){
 // ====== CARD REDUCERS ======
 
 function getCardReducer(state, action){
+  // console.log("L31 getCardReducer state= ", state)
+  // console.log("L32 getCardReducer action= ", action)
   switch (action.type) {
     case TYPES.GET_CARD:
       return {
+        deckId: action.deckId,
+        cardId: action.card.cardId,
         card: action.card
       }
     default:
       return {...state}
   }
 }//getCardReducer()
-
 
 export default combineReducers({
   getAllDecksReducer,

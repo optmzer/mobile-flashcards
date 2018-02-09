@@ -5,18 +5,20 @@ import {
   FLASH_CARD_STORAGE_KEY,
 } from '../utils/helpers'
 import { getDeckAction } from './deck_actions'
+import * as _ from 'underscore'
 
-export function getCardAction(cardId){
+export function getCardAction(deckId, card){
   return {
     type: TYPES.GET_CARD,
-    cardId: cardId,
+    deckId, deckId,
+    cardId: card.cardId,
+    card: card,
   }
 }
 
 export function saveCardAction(deckId, card){
-  // console.log("L16 card_actions deckId= "+deckId+", card=", card)
   let newCard = {
-      qId: Date.now(),
+      cardId: Date.now(),
       question: card.question,
       answer: card.answer,
   }
@@ -38,20 +40,15 @@ export function saveCardAction(deckId, card){
             }
           })
           //Write into AsyncStorage
-          console.log("L40 saveCardAction data", data)
           AsyncStorage.mergeItem(
             FLASH_CARD_STORAGE_KEY,
             JSON.stringify(data),
             (err) => err ? console.error("L37 card_actions writing into AsyncStorage", err) : null
           )
           dispatch(getDeckAction(deckId))
-
         }
       }
     )
-    /**
-    TODO: refresh all cards use FlatList to show cards in the Deck
-    */
     return dispatch(saveCard(card))
   }
 }
@@ -63,9 +60,59 @@ function saveCard(card){
   }
 }
 
-export function deleteCardAction(cardId){
+
+export function deleteCardAction(deckId, cardId){
+  return function(dispatch){
+    AsyncStorage.getItem(
+      FLASH_CARD_STORAGE_KEY,
+      (err, decks) => {
+        if(err){
+          console.error("L19 deck_actions Error geting Item from AsyncStorage.", err)
+        }
+        if(decks){
+          //Find card by cardId
+          let data = JSON.parse(decks)
+          Object.keys(data).map(key => {
+            //If deckId match add question
+            if(!_.isEmpty(data[key].questions)){
+              //Filter out deleted card
+              let newQuestions = data[key].questions.filter(item.cardId !== cardId)
+              //save new set of Questions
+              data[key].questions = newQuestions
+            }
+          })
+          //Write into AsyncStorage
+          AsyncStorage.mergeItem(
+            FLASH_CARD_STORAGE_KEY,
+            JSON.stringify(data),
+            (err) => err ? console.error("L37 card_actions writing into AsyncStorage", err) : null
+          )
+          //Renew Deck
+          dispatch(getDeckAction(deckId))
+        }
+      }
+    )
+  }
+}
+
+function deleteCard(cardId){
+
   return {
     type: TYPES.DELETE_CARD,
     cardId: cardId,
   }
 }
+
+// export function getNextCardAction(currentCardId){
+//   return {
+//     type: TYPES.GET_NEXT_CARD,
+//     currentCardId: currentCardId,
+//   }
+// }
+//
+// export function getPreviousCardAction(currentCardId){
+//   return {
+//     type: TYPES.GET_PREV_CARD,
+//     currentCardId: currentCardId,
+//   }
+// }

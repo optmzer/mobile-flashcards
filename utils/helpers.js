@@ -19,12 +19,12 @@ export const cardStorage = {
     title: 'React',
     questions: [
       {
-        qId: 1,
+        cardId: 1,
         question: 'What is React?',
         answer: 'A library for managing user interfaces'
       },
       {
-        qId: 2,
+        cardId: 2,
         question: 'Where do you make Ajax requests in React?',
         answer: 'The componentDidMount lifecycle event'
       }
@@ -35,7 +35,7 @@ export const cardStorage = {
     title: 'JavaScript',
     questions: [
       {
-        qId: 3,
+        cardId: 3,
         question: 'What is a closure?',
         answer: 'The combination of a function and the lexical environment within which that function was declared.'
       }

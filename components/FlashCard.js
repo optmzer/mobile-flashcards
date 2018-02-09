@@ -12,36 +12,84 @@ import {
   FontAwesome,
   MaterialIcons,
 } from "@expo/vector-icons"
-// import { setTestData } from '../utils/helpers'
+import * as _ from 'underscore'
 import {getAllDecksAction, getCardAction} from '../actions'
 
-//TODO: make cardId so FlashCard can get card from the store.
-//I can use Date.now() for this simple program as I can only make 1 card at a time.
+/**
+TODO:
+Make card editable,
+Save changes
+Allign buttons horizontally to the right. for edit mode.
+*/
 
 class FlashCard extends Component{
 
   state = {
+    disabledNextCardBtn: false,
+    disabledPrevCardBtn: false,
     front_editable: false,
     back_editable: false,
-    card: {}
+    card: {},
+    deckLength: 0,
+    cardIndex: 0,
   }
 
   componentWillMount(){
-    const { navigation } = this.props
-    this.setState({
-      card: navigation.state.params.card
-    })
+    const { getDeckReducer, getCardReducer } = this.props
+    let deck = getDeckReducer.deck.questions.forEach((card, index) => {
+        if(!_.isEmpty(card) && card.cardId === getCardReducer.cardId){
+          this.setState({
+            card: card,
+            deckLength: getDeckReducer.deck.questions.length,
+            cardIndex: index
+          })
+        }
+    })//.forEach()
   }//componentWillMount()
 
-
   getNextCard(){
-    //TODO: returns next card in the Deck
-    //For arrow-forward
-  }
+    const { cardIndex, deckLength } = this.state
+    const { getDeckReducer, dispatch } = this.props
+
+    if(cardIndex < deckLength - 1){
+      let nextCard = getDeckReducer.deck.questions[cardIndex + 1]
+      console.log("L79 getNextCard nextCardId = ", nextCard)
+      dispatch(getCardAction(getDeckReducer.deck.deckId, nextCard))
+      this.setState((prevState) => {
+        return {
+          card: nextCard,
+          cardIndex: prevState.cardIndex + 1,
+          disabledPrevCardBtn: false,
+        }
+      })
+    }else{
+      this.setState({
+        disabledNextCardBtn: true,//locked
+      })
+    }
+  }//getNextCard()
 
   getPreviousCard(){
-    //TODO: returns previos card in the Deck
     //For arrow-back
+    const { cardIndex, deckLength } = this.state
+    const { getDeckReducer, dispatch } = this.props
+
+    if(cardIndex > 0){
+      let nextCard = getDeckReducer.deck.questions[cardIndex - 1]
+      console.log("L117 getNextCard nextCardId = ", nextCard)
+      dispatch(getCardAction(getDeckReducer.deck.deckId, nextCard))
+      this.setState((prevState) => {
+        return {
+          card: nextCard,
+          cardIndex: prevState.cardIndex - 1,
+          disabledNextCardBtn: false,
+        }
+      })
+    }else{
+      this.setState({
+        disabledPrevCardBtn: true,//locked
+      })
+    }
   }
 
   setFrontEditable(){
@@ -66,13 +114,14 @@ class FlashCard extends Component{
   render(){
     // setTestData()
     const { front_editable, back_editable, card } = this.state
-    console.log("L53 FlashCard this.props = ", this.props)
-    console.log("L54 FlashCard this.state = ", this.state)
+    const { getCardReducer, getDeckReducer } = this.props
+    // console.log("L112 FlashCard this.props = ", this.props)
+    // console.log("L113 FlashCard this.state = ", this.state)
 
     return(
       <View style={styles.container}>
         <View style={styles.deck_title}>
-          <Text style={{fontSize: 27}}>Title: {card && card.title}</Text>
+          <Text style={{fontSize: 27}}>Title: {getDeckReducer.deck && getDeckReducer.deck.title}</Text>
           <TouchableOpacity
             style={styles.edit_icon}
             onPress={() => this.setFrontEditable()}
@@ -81,22 +130,34 @@ class FlashCard extends Component{
           </TouchableOpacity>
         </View>
         <View style={styles.question}>
-          <Text>Question: </Text>
-          <TextInput
-            style={styles.text_input}
-            editable={front_editable}
+          <Text
+            style={{fontSize: 20}}
           >
-            {card.questions && card.questions[0].question}
-          </TextInput>
+            Question:
+          </Text>
+          <TextInput
+            style={styles.textInput}
+            editable={front_editable}
+            value={card.question}
+          />
           {this.state.front_editable &&
-            <TouchableOpacity
-              onPress={() => this.saveChanges()}
-            >
-              <FontAwesome name="save" size={30}/>
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                onPress={() => this.saveChanges()}
+              >
+                <FontAwesome name="save" size={30}/>
+                <Text>Save</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.saveChanges()}
+              >
+                <FontAwesome name="close" size={30}/>
+                <Text>Cancel</Text>
+              </TouchableOpacity>
+            </View>
           }
           <Text>{"\n"}</Text>
-          <Text>Do you concure?</Text>
+          <Text style={{fontSize: 20}}>Do you concure?</Text>
           <Text>{"\n"}</Text>
         </View>
         <View style={styles.answer_buttons}>
@@ -107,15 +168,24 @@ class FlashCard extends Component{
             <Text style={styles.button_text}>Incorrect</Text>
           </TouchableOpacity>
         </View>
-        <Text>{"\n"}</Text>
         <View style={styles.cardNavigation}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.getPreviousCard()}
+            disabled={this.state.disabledPrevCardBtn}
+          >
             <MaterialIcons name="arrow-back" size={30}/>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={{fontSize: 25}}>Hint</Text>
+          <TouchableOpacity
+            disabled={true}
+          >
+            <Text style={{fontSize: 18}}>
+              Card {this.state.cardIndex + 1}/{this.state.deckLength}
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.getNextCard()}
+            disabled={this.state.disabledNextCardBtn}
+          >
             <MaterialIcons name="arrow-forward" size={30}/>
           </TouchableOpacity>
         </View>
@@ -140,12 +210,10 @@ const styles = StyleSheet.create({
   edit_icon: {
     alignSelf: "center",
   },
-  text_input: {
-    //get rid of bottom border
-    //set min height
-    // maxHeight: 200,
-    borderBottomWidth: 0,
-    fontSize: 24,
+  textInput: {
+    marginTop: 30,
+    fontSize: 25,
+    height: 60
   },
   answer_buttons:{
     flexDirection: "column",
@@ -177,16 +245,11 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(state){
-  const {getCardReducer} = state
+  const {getCardReducer, getDeckReducer} = state
   return {
-    getCardReducer,
+    getDeckReducer: getDeckReducer,
+    getCardReducer: getCardReducer,
   }
 }
-
-// function mapDispatchToProps(dispatch){
-//   return {
-//     getAllDecks: () => dispatch(getAllDecks()),
-//   }
-// }
 
 export default connect(mapStateToProps)(FlashCard)

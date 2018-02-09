@@ -10,6 +10,7 @@ import {
   FlatList,
 } from 'react-native'
 import {
+  getCardAction,
   getDeckAction,
   deleteDeckAction,
 } from '../actions'
@@ -20,7 +21,7 @@ Rename Deck title,
 */
 class Deck extends Component{
 
-  //TODO: add deleteDeck(deckId) method.
+  //TODO:
   // componentWillReceiveNewProps(){
   //
   // }
@@ -36,8 +37,9 @@ componentDidMount(){
 }
 
 getCard(card){
-  const { navigation, dispatch } = this.props
-  navigation.navigate("FlashCard", {card: card})
+  const { navigation, dispatch, getDeckReducer } = this.props
+  dispatch(getCardAction(getDeckReducer.deck.deckId, card))
+  navigation.navigate("FlashCard")
 }
 
 _keyExtractor = (item, index) => {
@@ -75,7 +77,7 @@ _renderItem = ({item}) => {
 
     const { navigation, getDeckReducer } = this.props
     // const { deck } = this.props.navigation.state.params
-    console.log("L40 Deck getDeckReducer = ", getDeckReducer)
+    // console.log("L78 Deck getDeckReducer = ", getDeckReducer)
     let deckId = 0, title = "", numbOfCards = 0, cards = []
 
     if(!_.isEmpty(getDeckReducer.deck)){//if not empty
