@@ -55,7 +55,7 @@ class AddCard extends Component{
         behavior="padding"
         style={styles.container}
       >
-        <Text>Deck Id : {deckId && deckId}</Text>
+        <Text style={{fontSize: 20}}>Insert Deck Title Here: {deckId && deckId}</Text>
         <TextInput
           placeholder="Question"
           onChangeText={(question) => this.setState({question})}

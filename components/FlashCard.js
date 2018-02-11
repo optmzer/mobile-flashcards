@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   AsyncStorage,
+  Switch,
+  ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native'
 import {
   FontAwesome,
@@ -17,6 +20,7 @@ import {getAllDecksAction, getCardAction} from '../actions'
 
 /**
 TODO:
+Use KeyboardAvoidingView in edit mode.
 Make card editable,
 Save changes
 Allign buttons horizontally to the right. for edit mode.
@@ -32,6 +36,7 @@ class FlashCard extends Component{
     card: {},
     deckLength: 0,
     cardIndex: 0,
+    toggleAnswer: false,
   }
 
   componentWillMount(){
@@ -50,6 +55,8 @@ class FlashCard extends Component{
   getNextCard(){
     const { cardIndex, deckLength } = this.state
     const { getDeckReducer, dispatch } = this.props
+
+    this.hideAnswer()//Switches answer off
 
     if(cardIndex < deckLength - 1){
       let nextCard = getDeckReducer.deck.questions[cardIndex + 1]
@@ -74,6 +81,8 @@ class FlashCard extends Component{
     const { cardIndex, deckLength } = this.state
     const { getDeckReducer, dispatch } = this.props
 
+    this.hideAnswer()//Switches answer off
+
     if(cardIndex > 0){
       let nextCard = getDeckReducer.deck.questions[cardIndex - 1]
       console.log("L117 getNextCard nextCardId = ", nextCard)
@@ -95,12 +104,14 @@ class FlashCard extends Component{
   setFrontEditable(){
     this.setState({
       front_editable: true,
+      toggleAnswer: true,
     })
   }
 
   setFrontNotEditable(){
     this.setState({
       front_editable: false,
+      toggleAnswer: false,
     })
   }
 
@@ -111,6 +122,18 @@ class FlashCard extends Component{
     this.setFrontNotEditable()
   }
 
+  toggleAnswer(){
+    this.setState({
+      toggleAnswer: !this.state.toggleAnswer
+    })
+  }
+
+  hideAnswer(){
+    this.setState({
+      toggleAnswer: false
+    })
+  }
+
   render(){
     // setTestData()
     const { front_editable, back_editable, card } = this.state
@@ -119,28 +142,22 @@ class FlashCard extends Component{
     // console.log("L113 FlashCard this.state = ", this.state)
 
     return(
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+      >
         <View style={styles.deck_title}>
           <Text style={{fontSize: 27}}>Title: {getDeckReducer.deck && getDeckReducer.deck.title}</Text>
-          <TouchableOpacity
-            style={styles.edit_icon}
-            onPress={() => this.setFrontEditable()}
-          >
-            <FontAwesome name="pencil-square-o" size={30}/>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.question}>
-          <Text
-            style={{fontSize: 20}}
-          >
-            Question:
-          </Text>
-          <TextInput
-            style={styles.textInput}
-            editable={front_editable}
-            value={card.question}
-          />
-          {this.state.front_editable &&
+          {
+            !this.state.front_editable
+            ?
+            <TouchableOpacity
+              style={styles.edit_icon}
+              onPress={() => this.setFrontEditable()}
+            >
+              <FontAwesome name="pencil-square-o" size={30}/>
+            </TouchableOpacity>
+            :
             <View>
               <TouchableOpacity
                 onPress={() => this.saveChanges()}
@@ -156,16 +173,49 @@ class FlashCard extends Component{
               </TouchableOpacity>
             </View>
           }
-          <Text>{"\n"}</Text>
-          <Text style={{fontSize: 20}}>Do you concure?</Text>
-          <Text>{"\n"}</Text>
         </View>
+        <ScrollView style={{flex: 1}}>
+          <KeyboardAvoidingView
+            style={styles.question}
+            behavior="padding"
+          >
+            <Text
+              style={{fontSize: 20}}
+            >
+              Question:
+            </Text>
+            <TextInput
+              style={styles.textInput}
+              multiline = {true}
+              numberOfLines = {4}
+              editable={front_editable}
+              value={card.question}
+            />
+            {
+              this.state.toggleAnswer &&
+              <TextInput
+                style={styles.textInput}
+                multiline = {true}
+                numberOfLines = {4}
+                editable={front_editable}
+                value={card.answer}
+              />
+            }
+          </KeyboardAvoidingView>
+        </ScrollView>
         <View style={styles.answer_buttons}>
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.button_text}>Correct</Text>
+            <Text style={styles.button_text}>True</Text>
           </TouchableOpacity>
+          <View style={styles.answerSwitch}>
+            <Switch
+              onValueChange={() => this.toggleAnswer()}
+              value={this.state.toggleAnswer}
+            />
+            <Text style={{fontSize: 20}}>Answer</Text>
+          </View>
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.button_text}>Incorrect</Text>
+            <Text style={styles.button_text}>False</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.cardNavigation}>
@@ -189,8 +239,7 @@ class FlashCard extends Component{
             <MaterialIcons name="arrow-forward" size={30}/>
           </TouchableOpacity>
         </View>
-
-      </View>
+      </KeyboardAvoidingView>
     )//return()
   }//render()
 }//class FlashCard
@@ -211,17 +260,22 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   textInput: {
-    marginTop: 30,
+    marginTop: 10,
     fontSize: 25,
     height: 60
   },
   answer_buttons:{
-    flexDirection: "column",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    marginBottom: 20,
+  },
+  answerSwitch: {
     alignItems: "center",
   },
   button: {
     backgroundColor: "#A3A3A3",
-    width: 160,
+    width: 100,
     height: 60,
     borderRadius: 3,
     borderTopWidth: 1,
@@ -233,8 +287,8 @@ const styles = StyleSheet.create({
   button_text: {
     fontSize: 25,
     textAlign: "center",
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   cardNavigation: {
     //align inline

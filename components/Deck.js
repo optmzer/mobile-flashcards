@@ -88,13 +88,10 @@ _renderItem = ({item}) => {
     }
     return(
       <View style={styles.container}>
-        { !_.isEmpty(getDeckReducer) &&
-          <Text style={styles.containerText}>
-            deckId: {deckId}
-          </Text>
-        }
         <Text style={styles.containerText}>
           Title: {title}
+        </Text>
+        <Text style={styles.containerText}>
           Cards: {numbOfCards}
         </Text>
         <FlatList
@@ -108,7 +105,7 @@ _renderItem = ({item}) => {
             onPress={() => navigation.navigate("Home")}
           >
             <FontAwesome name="home" size={30}/>
-            <Text>Return</Text>
+            <Text>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}>
             <MaterialIcons name="play-arrow" size={30}/>

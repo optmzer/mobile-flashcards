@@ -43,7 +43,6 @@ class Home extends Component {
             >
               <View>
                 <Text>Title: {item.title}</Text>
-                <Text>deckId: {item.deckId}</Text>
                 <Text>No of Cards {item.questions.length}</Text>
                 <Text>Date Modified</Text>
               </View>
