@@ -60,12 +60,41 @@ function saveCard(card){//This action does not do anything yet
   }
 }
 
-function saveEditedCardAction(deckId, card){
-  let editedCard = {
-      cardId: card.cardId,
-      question: card.question,
-      answer: card.answer,
-    }
+export function saveEditedCardAction(deckId, card){
+  return function(dispatch){
+    //Get the Decks
+    AsyncStorage.getItem(
+      FLASH_CARD_STORAGE_KEY,
+      (err, decks) => {
+        if(err){
+          console.error("L19 deck_actions Error geting Item from AsyncStorage.", err)
+        }
+        if(decks){
+          //Find deck by deckId
+          let data = JSON.parse(decks)
+          Object.keys(data).forEach(key => {
+            //If deckId match find card and add new questions
+            if(data[key].deckId === deckId){
+              data[key].questions.forEach((item) => {
+                if(item.cardId === card.cardId){
+                  item.question = card.question
+                  item.answer = card.answer
+                  console.log("L83 saveEditedCardAction = ", item)
+                }
+              })//forEach
+            }
+          })
+          //Write into AsyncStorage
+          AsyncStorage.mergeItem(
+            FLASH_CARD_STORAGE_KEY,
+            JSON.stringify(data),
+            (err) => err ? console.error("L37 card_actions writing into AsyncStorage", err) : null
+          )
+          dispatch(getDeckAction(deckId))
+        }
+      }
+    )
+  }
 }//saveEditedCardAction()
 
 // function saveEditedCard(card){

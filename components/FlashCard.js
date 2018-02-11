@@ -85,6 +85,7 @@ class FlashCard extends Component{
         disabledNextCardBtn: true,//locked
       })
     }
+    this.setFrontNotEditable()
   }//getNextCard()
 
   getPreviousCard(){
@@ -112,6 +113,7 @@ class FlashCard extends Component{
         disabledPrevCardBtn: true,//locked
       })
     }
+    this.setFrontNotEditable()
   }
 
   setFrontEditable(){
@@ -132,12 +134,15 @@ class FlashCard extends Component{
     const {getCardReducer, dispatch} = this.props
 
     let card = {
-      cardId: this.state.cardId,
+      cardId: this.state.card.cardId,
       question: this.state.questionValue,
       answer: this.state.answerValue,
     }
 
     //Save changes into the card
+    console.log("L141 FlashCard saveChanges card = ", card)
+    console.log("L142 FlashCard getCardReducer.deckId = ", getCardReducer.deckId)
+
     dispatch(saveEditedCardAction(getCardReducer.deckId, card))
 
     //setState front_editable: false

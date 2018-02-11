@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import { TabNavigator, StackNavigator } from 'react-navigation'
 import { Constants } from 'expo'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import thunk from 'redux-thunk'
 import reducers from './reducers'
 import Home from './components/Home'
@@ -88,6 +88,7 @@ const HomeNavigator = StackNavigator({
   Deck: {
     screen: Deck,
     navigationOptions: {
+      title: "Deck",
       headerTintColor: "#2b94e5",
       headerStyle: {
         //backgroundColor: "",
@@ -97,6 +98,7 @@ const HomeNavigator = StackNavigator({
   AddCard: {
     screen: AddCard,
     navigationOptions: {
+      title: "Add Card",
       headerTintColor: "#2b94e5",
       headerStyle: {
         //backgroundColor: "",
@@ -106,10 +108,12 @@ const HomeNavigator = StackNavigator({
   FlashCard: {
     screen: FlashCard,
     navigationOptions: {
+      headerRight: <MaterialIcons name="menu" size={30}/>,
+      title: "FlashCard",
       headerTintColor: "#2b94e5",
       headerStyle: {
         //backgroundColor: "",
-      }
+      },
     } //navigationOptions
   }, //FlashCard
 })
