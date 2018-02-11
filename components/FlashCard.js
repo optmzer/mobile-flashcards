@@ -16,7 +16,12 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons"
 import * as _ from 'underscore'
-import {getAllDecksAction, getCardAction} from '../actions'
+import {
+  getCardAction,
+  getDeckAction,
+  saveEditedCardAction,
+  deleteCardAction,
+} from '../actions'
 
 /**
 TODO:
@@ -37,6 +42,8 @@ class FlashCard extends Component{
     deckLength: 0,
     cardIndex: 0,
     toggleAnswer: false,
+    questionValue: "",
+    answerValue: "",
   }
 
   componentWillMount(){
@@ -46,7 +53,9 @@ class FlashCard extends Component{
           this.setState({
             card: card,
             deckLength: getDeckReducer.deck.questions.length,
-            cardIndex: index
+            cardIndex: index,
+            questionValue: card.question,
+            answerValue: card.answer,
           })
         }
     })//.forEach()
@@ -67,6 +76,8 @@ class FlashCard extends Component{
           card: nextCard,
           cardIndex: prevState.cardIndex + 1,
           disabledPrevCardBtn: false,
+          questionValue: nextCard.question,
+          answerValue: nextCard.answer,
         }
       })
     }else{
@@ -92,6 +103,8 @@ class FlashCard extends Component{
           card: nextCard,
           cardIndex: prevState.cardIndex - 1,
           disabledNextCardBtn: false,
+          questionValue: nextCard.question,
+          answerValue: nextCard.answer,
         }
       })
     }else{
@@ -115,8 +128,17 @@ class FlashCard extends Component{
     })
   }
 
-  saveChanges(card){
+  saveChanges(){
+    const {getCardReducer, dispatch} = this.props
+
+    let card = {
+      cardId: this.state.cardId,
+      question: this.state.questionValue,
+      answer: this.state.answerValue,
+    }
+
     //Save changes into the card
+    dispatch(saveEditedCardAction(getCardReducer.deckId, card))
 
     //setState front_editable: false
     this.setFrontNotEditable()
@@ -134,10 +156,22 @@ class FlashCard extends Component{
     })
   }
 
+  cancelChanges(){
+    this.setFrontNotEditable()
+  }
+
+  deleteCard(){
+    const { card } = this.state
+    const { dispatch, navigation, getCardReducer } = this.props
+    console.log("L166 deleteCard card.deckId = ", card.deckId)
+    dispatch(deleteCardAction(getCardReducer.deckId, card.cardId))
+    navigation.goBack()
+  }
+
   render(){
     // setTestData()
     const { front_editable, back_editable, card } = this.state
-    const { getCardReducer, getDeckReducer } = this.props
+    const { getCardReducer, getDeckReducer, navigation } = this.props
     // console.log("L112 FlashCard this.props = ", this.props)
     // console.log("L113 FlashCard this.state = ", this.state)
 
@@ -151,12 +185,21 @@ class FlashCard extends Component{
           {
             !this.state.front_editable
             ?
-            <TouchableOpacity
-              style={styles.edit_icon}
-              onPress={() => this.setFrontEditable()}
-            >
-              <FontAwesome name="pencil-square-o" size={30}/>
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                onPress={() => this.deleteCard()}
+                style={styles.edit_icon}>
+                <MaterialIcons name="delete-forever" size={30}/>
+                <Text>Delete</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.edit_icon}
+                onPress={() => this.setFrontEditable()}
+              >
+                <FontAwesome name="pencil-square-o" size={30}/>
+                <Text>Edit</Text>
+              </TouchableOpacity>
+            </View>
             :
             <View>
               <TouchableOpacity
@@ -166,7 +209,7 @@ class FlashCard extends Component{
                 <Text>Save</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.saveChanges()}
+                onPress={() => this.cancelChanges()}
               >
                 <FontAwesome name="close" size={30}/>
                 <Text>Cancel</Text>
@@ -189,7 +232,8 @@ class FlashCard extends Component{
               multiline = {true}
               numberOfLines = {4}
               editable={front_editable}
-              value={card.question}
+              onChangeText={(questionValue) => this.setState({questionValue})}
+              value={this.state.questionValue}
             />
             {
               this.state.toggleAnswer &&
@@ -198,7 +242,8 @@ class FlashCard extends Component{
                 multiline = {true}
                 numberOfLines = {4}
                 editable={front_editable}
-                value={card.answer}
+                onChangeText={(answerValue) => this.setState({answerValue})}
+                value={this.state.answerValue}
               />
             }
           </KeyboardAvoidingView>

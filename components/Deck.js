@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import {
   getCardAction,
+  deleteCardAction,
   getDeckAction,
   deleteDeckAction,
 } from '../actions'
@@ -53,7 +54,7 @@ _renderItem = ({item}) => {
   return (
     <View>
       {
-        !item.length
+        !_.isEmpty(item)
         ?
         <TouchableOpacity
           onPress={() => this.getCard(item)}
@@ -77,7 +78,7 @@ _renderItem = ({item}) => {
 
     const { navigation, getDeckReducer } = this.props
     // const { deck } = this.props.navigation.state.params
-    // console.log("L78 Deck getDeckReducer = ", getDeckReducer)
+    console.log("L81 Deck getDeckReducer = ", getDeckReducer)
     let deckId = 0, title = "", numbOfCards = 0, cards = []
 
     if(!_.isEmpty(getDeckReducer.deck)){//if not empty

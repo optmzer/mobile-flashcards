@@ -31,6 +31,8 @@ function getAllDecks(decks){
 }//getAllDecksAction()
 
 export function getDeckAction(deckId){
+  console.log("L34 getDeckAction deckId =", deckId)
+
   return function(dispatch){
     AsyncStorage.getItem(
       FLASH_CARD_STORAGE_KEY,
@@ -56,7 +58,7 @@ export function getDeckAction(deckId){
 }//getDeckAction()
 
 function getDeck(deck){
-  // console.log("L57 deck_actions getDeck = ", deck)
+  console.log("L59 deck_actions getDeck = ", deck)
   return {
     type: TYPES.GET_DECK,
     deck: deck,

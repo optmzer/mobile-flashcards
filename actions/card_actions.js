@@ -17,16 +17,16 @@ export function getCardAction(deckId, card){
 }
 
 export function saveCardAction(deckId, card){
-  let newCard = {
-      cardId: Date.now(),
-      question: card.question,
-      answer: card.answer,
-  }
   return function(dispatch){
     //Get the Decks
     AsyncStorage.getItem(
       FLASH_CARD_STORAGE_KEY,
       (err, decks) => {
+        let newCard = {
+          cardId: Date.now(),
+          question: card.question,
+          answer: card.answer,
+        }
         if(err){
           console.error("L19 deck_actions Error geting Item from AsyncStorage.", err)
         }
@@ -53,13 +53,24 @@ export function saveCardAction(deckId, card){
   }
 }
 
-function saveCard(card){
+function saveCard(card){//This action does not do anything yet
   return {
     type: TYPES.SAVE_CARD,
     card: card,
   }
 }
 
+function saveEditedCardAction(deckId, card){
+  let editedCard = {
+      cardId: card.cardId,
+      question: card.question,
+      answer: card.answer,
+    }
+}//saveEditedCardAction()
+
+// function saveEditedCard(card){
+//
+// }
 
 export function deleteCardAction(deckId, cardId){
   return function(dispatch){
@@ -76,7 +87,7 @@ export function deleteCardAction(deckId, cardId){
             //If deckId match add question
             if(!_.isEmpty(data[key].questions)){
               //Filter out deleted card
-              let newQuestions = data[key].questions.filter(item.cardId !== cardId)
+              let newQuestions = data[key].questions.filter((card) => card.cardId !== cardId)
               //save new set of Questions
               data[key].questions = newQuestions
             }
@@ -87,32 +98,19 @@ export function deleteCardAction(deckId, cardId){
             JSON.stringify(data),
             (err) => err ? console.error("L37 card_actions writing into AsyncStorage", err) : null
           )
-          //Renew Deck
+          console.log("L101 deleteCardAction deckId =", deckId)
           dispatch(getDeckAction(deckId))
         }
       }
     )
-  }
-}
+    //Renew Deck
+    return dispatch(deleteCard(deckId))
+  }//dispatch()
+}//deleteCardAction()
 
 function deleteCard(cardId){
-
   return {
     type: TYPES.DELETE_CARD,
     cardId: cardId,
   }
 }
-
-// export function getNextCardAction(currentCardId){
-//   return {
-//     type: TYPES.GET_NEXT_CARD,
-//     currentCardId: currentCardId,
-//   }
-// }
-//
-// export function getPreviousCardAction(currentCardId){
-//   return {
-//     type: TYPES.GET_PREV_CARD,
-//     currentCardId: currentCardId,
-//   }
-// }
