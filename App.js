@@ -22,6 +22,7 @@ import FlashCard from './components/FlashCard'
 import AddDeck from './components/AddDeck'
 import Deck from './components/Deck'
 import AddCard from './components/AddCard'
+import { setLocalNotification } from './utils/helpers'
 
 console.ignoredYellowBox = ['Remote debugger']
 
@@ -120,7 +121,12 @@ const HomeNavigator = StackNavigator({
 
 // <FlashCard />
 
-export default class App extends React.Component {
+class App extends React.Component {
+
+  componentDidMount(){
+    setLocalNotification()
+  }
+
   render() {
     return (
       <Provider store={store}>
@@ -144,3 +150,5 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
   },
 })
+
+export default App

@@ -15,6 +15,7 @@ import {
   getDeckAction,
   deleteDeckAction,
 } from '../actions'
+import { clearLocalNotification } from '../utils/helpers'
 
 /**TODO: Add TabDrawer to edit deck ???
 Add card,
@@ -35,6 +36,10 @@ deleteDeck(){
 componentDidMount(){
   const { navigation, dispatch } = this.props
   // dispatch(getDeckAction(navigation.state.params.deck.deckId))
+  /**If a Deck was opende
+  that means user did study. Cancel all notifications for today
+  */
+  clearLocalNotification()
 }
 
 getCard(card){
@@ -78,7 +83,7 @@ _renderItem = ({item}) => {
 
     const { navigation, getDeckReducer } = this.props
     // const { deck } = this.props.navigation.state.params
-    console.log("L81 Deck getDeckReducer = ", getDeckReducer)
+    // console.log("L81 Deck getDeckReducer = ", getDeckReducer)
     let deckId = 0, title = "", numbOfCards = 0, cards = []
 
     if(!_.isEmpty(getDeckReducer.deck)){//if not empty

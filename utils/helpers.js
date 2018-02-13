@@ -1,6 +1,9 @@
 import {AsyncStorage} from 'react-native'
+import { Notifications, Permissions } from 'expo'
 
 export const FLASH_CARD_STORAGE_KEY = "flashcards:decks"
+export const FLASH_CARD_NOTIFICATIONS_KEY = "flashcards:notifications"
+
 
 export function convertObjectToArray(obj){
   return Object.keys(obj).map(key => {
@@ -42,3 +45,62 @@ export const cardStorage = {
     ]
   }
 }//const cardStorage
+
+export function clearLocalNotification(){
+  return AsyncStorage.removeItem(FLASH_CARD_NOTIFICATIONS_KEY)
+          .then(Notifications.cancelAllScheduledNotificationsAsync())
+}
+
+function createNotification(){
+  return {
+    title: "Your daily study reminder.",
+    body: "Practice is your key to Success in life",
+    ios: {
+      sound: true,
+    },
+    android: {//Android
+      sound: true,
+      priority: "high",
+      sticky: false,
+      vibrate: true,
+    },
+  }
+}//createNotification()
+
+export function setLocalNotification(){
+  AsyncStorage.getItem(
+    FLASH_CARD_NOTIFICATIONS_KEY,
+    (err, data) => {
+      console.log("L74 helpers getting notification key. data = ", data)
+      let notifications = JSON.parse(data)
+      if(err){
+        console.error("L73 helpers Error geting Item from AsyncStorage.", err)
+      }
+      if(data === null){
+        Permissions.askAsync(Permissions.NOTIFICATIONS)
+          .then(({status}) => {
+            if(status === "granted"){
+              Notifications.cancelAllScheduledNotificationsAsync()
+
+              let tomorrowNotice = new Date()
+              tomorrowNotice.setDate(tomorrowNotice.getDate() + 1)
+              tomorrowNotice.setHours(14)
+              tomorrowNotice.setMinutes(20)
+
+              Notifications.scheduleLocalNotificationAsync(
+                createNotification(),
+                {
+                  time: tomorrowNotice,
+                  repead: "day",
+                }
+              )
+              AsyncStorage.setItem(
+                FLASH_CARD_NOTIFICATIONS_KEY,
+                JSON.stringify(true),
+              )
+            }//if("granted")
+          })//.then()
+      }//if
+    }
+  )//.getItem
+}//setLocalNotification()
