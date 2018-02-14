@@ -10,6 +10,7 @@ import {
   Switch,
   ScrollView,
   KeyboardAvoidingView,
+  BackHandler,
 } from 'react-native'
 import {
   FontAwesome,
@@ -21,7 +22,8 @@ import {
   getDeckAction,
   saveEditedCardAction,
   deleteCardAction,
-  setQuizScore,
+  setQuizScoreAction,
+  finishQuizAction,
 } from '../actions'
 
 /**
@@ -62,6 +64,34 @@ class FlashCard extends Component{
         }
     })//.forEach()
   }//componentWillMount()
+
+  componentDidMount(){
+    // BackHandler.addEventListener("hardwareBackPress", this.onBackButtonPressAndroid)
+  }
+
+  componentWillUnmount(){
+    const { dispatch } = this.props
+    dispatch(finishQuizAction())
+    dispatch(setQuizScoreAction(0))
+    // BackHandler.removeEventListener("hardwareBackPress", this.onBackButtonPressAndroid)
+
+  }
+
+  // onBackButtonPressAndroid = () => {
+  //   const {dispatch, quizReducer, navigation} = this.props
+  //   if(this.state.startQuiz){
+  //     dispatch(finishQuizAction())
+  //     dispatch(setQuizScoreAction(0))
+  //     this.setState({
+  //       startQuiz: false,
+  //       quizScore: 0,
+  //     })
+  //     navigation.goBack()
+  //     return true
+  //   }else{
+  //     return false
+  //   }
+  // }
 
   getNextCard(){
     const { cardIndex, deckLength } = this.state
@@ -181,7 +211,7 @@ class FlashCard extends Component{
           quizScore: this.state.quizScore + 1,
           voteCounter: this.state.voteCounter + 1
         })
-        dispatch(setQuizScore(this.state.quizScore + 1))
+        dispatch(setQuizScoreAction(this.state.quizScore + 1))
         this.getNextCard()
       }
   }//correctAnswer()

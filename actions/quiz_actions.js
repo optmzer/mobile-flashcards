@@ -12,7 +12,7 @@ export function finishQuizAction(){
   }
 }
 
-export function setQuizScore(quizScore){
+export function setQuizScoreAction(quizScore){
   return {
     type: TYPES.SET_QUIZ_SCORE,
     quizScore: quizScore

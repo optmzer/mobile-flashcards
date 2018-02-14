@@ -109,6 +109,7 @@ const HomeNavigator = StackNavigator({
   FlashCard: {
     screen: FlashCard,
     navigationOptions: {
+      // headerLeft: <MaterialIcons name-"arrow-left" size={30}/>,
       headerRight: <MaterialIcons name="menu" size={30}/>,
       title: "FlashCard",
       headerTintColor: "#2b94e5",
