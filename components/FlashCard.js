@@ -21,14 +21,12 @@ import {
   getDeckAction,
   saveEditedCardAction,
   deleteCardAction,
+  setQuizScore,
 } from '../actions'
 
 /**
 TODO:
-Use KeyboardAvoidingView in edit mode.
-Make card editable,
-Save changes
-Allign buttons horizontally to the right. for edit mode.
+Increment score and show percentage.
 */
 
 class FlashCard extends Component{
@@ -44,10 +42,13 @@ class FlashCard extends Component{
     toggleAnswer: false,
     questionValue: "",
     answerValue: "",
+    startQuiz: false,
+    quizScore: 0,
+    voteCounter: 0,
   }
 
   componentWillMount(){
-    const { getDeckReducer, getCardReducer } = this.props
+    const { getDeckReducer, getCardReducer, quizReducer } = this.props
     let deck = getDeckReducer.deck.questions.forEach((card, index) => {
         if(!_.isEmpty(card) && card.cardId === getCardReducer.cardId){
           this.setState({
@@ -56,6 +57,7 @@ class FlashCard extends Component{
             cardIndex: index,
             questionValue: card.question,
             answerValue: card.answer,
+            startQuiz: quizReducer.startQuiz,
           })
         }
     })//.forEach()
@@ -69,7 +71,7 @@ class FlashCard extends Component{
 
     if(cardIndex < deckLength - 1){
       let nextCard = getDeckReducer.deck.questions[cardIndex + 1]
-      console.log("L79 getNextCard nextCardId = ", nextCard)
+      // console.log("L74 getNextCard nextCardId = ", nextCard)
       dispatch(getCardAction(getDeckReducer.deck.deckId, nextCard))
       this.setState((prevState) => {
         return {
@@ -97,7 +99,7 @@ class FlashCard extends Component{
 
     if(cardIndex > 0){
       let nextCard = getDeckReducer.deck.questions[cardIndex - 1]
-      console.log("L117 getNextCard nextCardId = ", nextCard)
+      // console.log("L101 getPreviousCard nextCardId = ", nextCard)
       dispatch(getCardAction(getDeckReducer.deck.deckId, nextCard))
       this.setState((prevState) => {
         return {
@@ -140,9 +142,6 @@ class FlashCard extends Component{
     }
 
     //Save changes into the card
-    console.log("L141 FlashCard saveChanges card = ", card)
-    console.log("L142 FlashCard getCardReducer.deckId = ", getCardReducer.deckId)
-
     dispatch(saveEditedCardAction(getCardReducer.deckId, card))
 
     //setState front_editable: false
@@ -151,7 +150,8 @@ class FlashCard extends Component{
 
   toggleAnswer(){
     this.setState({
-      toggleAnswer: !this.state.toggleAnswer
+      toggleAnswer: !this.state.toggleAnswer,
+      // startQuiz: !this.state.startQuiz
     })
   }
 
@@ -168,15 +168,49 @@ class FlashCard extends Component{
   deleteCard(){
     const { card } = this.state
     const { dispatch, navigation, getCardReducer } = this.props
-    console.log("L166 deleteCard card.deckId = ", card.deckId)
     dispatch(deleteCardAction(getCardReducer.deckId, card.cardId))
     navigation.goBack()
   }
 
+  correctAnswer(){
+    const { dispatch } = this.props
+    const { cardIndex, deckLength, voteCounter } = this.state
+
+      if(voteCounter < deckLength){
+        this.setState({
+          quizScore: this.state.quizScore + 1,
+          voteCounter: this.state.voteCounter + 1
+        })
+        dispatch(setQuizScore(this.state.quizScore + 1))
+        this.getNextCard()
+      }
+  }//correctAnswer()
+
+  incorrectAnswer(){
+    const { voteCounter, deckLength } = this.state
+
+    if(voteCounter < deckLength){
+      this.getNextCard()
+      this.setState({
+        voteCounter: this.state.voteCounter + 1
+      })
+    }
+  }//incorrectAnswer()
+
+  getQuizScore(){
+    const { quizReducer } = this.props
+    let score = 0
+    console.log("L191 FlashCard ", quizReducer.quizScore);
+    if(quizReducer.quizScore){//If it is a number
+      score = ((quizReducer.quizScore / this.state.deckLength)*100).toFixed(2)
+    }
+    return score
+  }//getQuizScore()
+
   render(){
     // setTestData()
     const { front_editable, back_editable, card } = this.state
-    const { getCardReducer, getDeckReducer, navigation } = this.props
+    const { quizReducer, getCardReducer, getDeckReducer, navigation } = this.props
     // console.log("L112 FlashCard this.props = ", this.props)
     // console.log("L113 FlashCard this.state = ", this.state)
 
@@ -186,7 +220,10 @@ class FlashCard extends Component{
         behavior="padding"
       >
         <View style={styles.deck_title}>
-          <Text style={{fontSize: 27}}>Title: {getDeckReducer.deck && getDeckReducer.deck.title}</Text>
+          <Text style={{fontSize: 27}}>
+            Deck: {getDeckReducer.deck && getDeckReducer.deck.title}
+          </Text>
+
           {
             !this.state.front_editable
             ?
@@ -235,46 +272,75 @@ class FlashCard extends Component{
             <TextInput
               style={styles.textInput}
               multiline = {true}
-              numberOfLines = {4}
+              numberOfLines = {3}
               editable={front_editable}
               onChangeText={(questionValue) => this.setState({questionValue})}
               value={this.state.questionValue}
             />
             {
               this.state.toggleAnswer &&
-              <TextInput
-                style={styles.textInput}
-                multiline = {true}
-                numberOfLines = {4}
-                editable={front_editable}
-                onChangeText={(answerValue) => this.setState({answerValue})}
-                value={this.state.answerValue}
-              />
+              <View>
+                <Text
+                  style={{fontSize: 20}}
+                >
+                  Answer:
+                </Text>
+                <TextInput
+                  style={styles.textInput}
+                  multiline = {true}
+                  numberOfLines = {3}
+                  editable={front_editable}
+                  onChangeText={(answerValue) => this.setState({answerValue})}
+                  value={this.state.answerValue}
+                />
+              </View>
             }
           </KeyboardAvoidingView>
         </ScrollView>
-        <View style={styles.answer_buttons}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.button_text}>True</Text>
-          </TouchableOpacity>
+        { this.state.startQuiz &&
+          <View style={styles.answer_buttons}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.correctAnswer()}
+            >
+              <Text style={styles.button_text}>Correct</Text>
+            </TouchableOpacity>
+            <View style={styles.score}>
+              <Text style={{fontSize: 20}}>Score: </Text>
+              <Text style={{fontSize: 20}}>
+                {this.getQuizScore()} %
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.incorrectAnswer()}
+            >
+              <Text style={styles.button_text}>Incorrect</Text>
+            </TouchableOpacity>
+          </View>
+        }
+        <View style={styles.stats}>
           <View style={styles.answerSwitch}>
+            <Text style={{fontSize: 20}}>Show answer</Text>
             <Switch
               onValueChange={() => this.toggleAnswer()}
               value={this.state.toggleAnswer}
             />
-            <Text style={{fontSize: 20}}>Answer</Text>
           </View>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.button_text}>False</Text>
-          </TouchableOpacity>
         </View>
-        <View style={styles.cardNavigation}>
+        <View
+          style={[styles.cardNavigation, {
+            marginBottom: this.state.startQuiz ? 26 : 20,
+          }]}
+        >
+        { !this.state.startQuiz &&
           <TouchableOpacity
             onPress={() => this.getPreviousCard()}
             disabled={this.state.disabledPrevCardBtn}
           >
-            <MaterialIcons name="arrow-back" size={30}/>
+              <MaterialIcons name="arrow-back" size={30}/>
           </TouchableOpacity>
+        }
           <TouchableOpacity
             disabled={true}
           >
@@ -282,12 +348,14 @@ class FlashCard extends Component{
               Card {this.state.cardIndex + 1}/{this.state.deckLength}
             </Text>
           </TouchableOpacity>
+        { !this.state.startQuiz &&
           <TouchableOpacity
             onPress={() => this.getNextCard()}
             disabled={this.state.disabledNextCardBtn}
           >
-            <MaterialIcons name="arrow-forward" size={30}/>
+              <MaterialIcons name="arrow-forward" size={30}/>
           </TouchableOpacity>
+        }
         </View>
       </KeyboardAvoidingView>
     )//return()
@@ -302,31 +370,39 @@ const styles = StyleSheet.create({
   },
   deck_title: {
     flexDirection: "row",
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     justifyContent: "space-between",
-    // textAlign: "left",
   },
   edit_icon: {
     alignSelf: "center",
   },
   textInput: {
-    marginTop: 10,
+    // marginTop: 5,
     fontSize: 25,
-    height: 60
   },
   answer_buttons:{
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    marginBottom: 20,
+    borderTopWidth: 1,
+    paddingTop: 5,
+    marginBottom: 15,
   },
   answerSwitch: {
-    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  stats: {
+    // flexDirection: "row",
+  },
+  score: {
+    flexDirection: "column",
+    justifyContent: "center",
   },
   button: {
     backgroundColor: "#A3A3A3",
     width: 100,
-    height: 60,
+    height: 40,
     borderRadius: 3,
     borderTopWidth: 1,
     borderRightWidth: 1,
@@ -335,24 +411,26 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button_text: {
-    fontSize: 25,
+    fontSize: 20,
     textAlign: "center",
-    paddingLeft: 10,
-    paddingRight: 10,
+    // paddingLeft: 20,
+    // paddingRight: 20,
   },
   cardNavigation: {
     //align inline
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingBottom: 20,
+    marginTop: 20,
+    marginBottom: 20,
   }
 })
 
 function mapStateToProps(state){
-  const {getCardReducer, getDeckReducer} = state
+  const {getCardReducer, getDeckReducer, quizReducer} = state
   return {
     getDeckReducer: getDeckReducer,
     getCardReducer: getCardReducer,
+    quizReducer: quizReducer,
   }
 }
 

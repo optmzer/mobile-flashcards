@@ -70,14 +70,17 @@ class AddDeck extends Component{
           style={styles.container}
         >
           <TextInput
-            placeholder="Deck Title"
-            onChangeText={(text) => this.setText(text)}
-            value={this.state.text}
             style={styles.deckTitle}
+            placeholder="Deck Title"
+            value={this.state.text}
+            onChangeText={(text) => this.setText(text)}
+            multiline = {true}
+            numberOfLines = {4}
           />
           <KeyboardAvoidingView
             behavior="padding"
-            style={styles.controls}>
+            style={styles.controls}
+          >
             <TouchableOpacity
               disabled={!this.state.text ? true : false}
               style={styles.controlsBtn}

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  ScrollView,
 } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
@@ -48,26 +49,33 @@ class AddCard extends Component{
   render(){
     const { navigation } = this.props
     const {deckId} = this.props.navigation.state.params
-    // console.log("L38 AddCard navigation.state.params = ",navigation.state.params)
+    // console.log("L52 AddCard navigation.state.params = ",navigation.state.params)
 
     return(
       <KeyboardAvoidingView
         behavior="padding"
         style={styles.container}
       >
-        <Text style={{fontSize: 20}}>Insert Deck Title Here: {deckId && deckId}</Text>
+        <Text style={{fontSize: 20}}>
+          Deck Title: {deckId && deckId.split("#!", 2)[1]}
+        </Text>
         <TextInput
           placeholder="Question"
           onChangeText={(question) => this.setState({question})}
           value={this.state.question}
-          style={[styles.cardInput, {marginTop: 30}]}
+          style={[styles.cardInput, {marginTop: 10}]}
+          multiline = {true}
+          numberOfLines = {4}
         />
         <TextInput
           placeholder="Answer"
           onChangeText={(answer) => this.setState({answer})}
           value={this.state.answer}
           style={styles.cardInput}
+          multiline = {true}
+          numberOfLines = {2}
         />
+
         <KeyboardAvoidingView
           behavior="padding"
           style={styles.controls}

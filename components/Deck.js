@@ -14,6 +14,7 @@ import {
   deleteCardAction,
   getDeckAction,
   deleteDeckAction,
+  startQuizAction,
 } from '../actions'
 import { clearLocalNotification } from '../utils/helpers'
 
@@ -46,6 +47,17 @@ getCard(card){
   const { navigation, dispatch, getDeckReducer } = this.props
   dispatch(getCardAction(getDeckReducer.deck.deckId, card))
   navigation.navigate("FlashCard")
+}
+
+startQuiz(){
+  const { navigation, dispatch, getDeckReducer } = this.props
+
+  if(!_.isEmpty(getDeckReducer.deck) && getDeckReducer.deck.questions.length !== 0){
+    let firstCard = getDeckReducer.deck.questions[0]
+    dispatch(startQuizAction())
+    //Get first card in the Deck.
+    this.getCard(firstCard)
+  }
 }
 
 _keyExtractor = (item, index) => {
@@ -113,7 +125,10 @@ _renderItem = ({item}) => {
             <FontAwesome name="home" size={30}/>
             <Text>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.startQuiz()}
+          >
             <MaterialIcons name="play-arrow" size={30}/>
             <Text>Start Quiz</Text>
           </TouchableOpacity>
