@@ -31,6 +31,11 @@ import QuizScore from './QuizScore'
 
 /**
 TODO:
+Has a bug???
+Home button needs to be pressed 2 times before it let you go Home.
+Do not know how to fix yet.
+TODO:
+When quiz runs disable edit/delete buttons.
 */
 
 class FlashCard extends Component{
@@ -410,7 +415,7 @@ class FlashCard extends Component{
             onPress={() => this.getNextCard()}
             disabled={this.state.disabledNextCardBtn}
           >
-              <MaterialIcons name="arrow-forward" size={30}/>
+            <MaterialIcons name="arrow-forward" size={30}/>
           </TouchableOpacity>
         }
         </View>
