@@ -10,7 +10,7 @@ export function getAllDecksAction(){
     if(err){
       console.error("L11 error getting keys from AsyncStorage. ", err)
     }
-    console.log("L13 deck_actions AsyncStorage keys. ", keys)
+    // console.log("L13 deck_actions AsyncStorage keys. ", keys)
   })
   return function(dispatch){
     return (

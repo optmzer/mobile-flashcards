@@ -199,23 +199,36 @@ class FlashCard extends Component{
         dispatch(setQuizScoreAction(this.state.quizScore + 1))
         this.getNextCard()
       }
+
+      if(voteCounter === deckLength - 1){
+        console.log("L204 FlashCard voteCounter = ", voteCounter)
+        console.log("L204 FlashCard deckLength = ", deckLength)
+
+        dispatch(finishQuizAction())
+      }
   }//correctAnswer()
 
   incorrectAnswer(){
     const { voteCounter, deckLength } = this.state
-
+    const { dispatch } = this.props
     if(voteCounter < deckLength){
       this.getNextCard()
       this.setState({
         voteCounter: this.state.voteCounter + 1
       })
     }
+
+    if(voteCounter === deckLength - 1){
+      console.log("L224 FlashCard voteCounter = ", voteCounter)
+      console.log("L225 FlashCard deckLength = ", deckLength)
+      dispatch(finishQuizAction())
+    }
   }//incorrectAnswer()
 
   getCurrentQuizScore(){
     const { quizReducer } = this.props
     let score = 0
-    console.log("L191 FlashCard ", quizReducer.quizScore);
+    // console.log("L231 FlashCard ", quizReducer.quizScore);
     if(quizReducer.quizScore){//If it is a number
       score = ((quizReducer.quizScore / this.state.deckLength)*100).toFixed(2)
     }
