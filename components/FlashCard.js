@@ -24,11 +24,13 @@ import {
   deleteCardAction,
   setQuizScoreAction,
   finishQuizAction,
+  startQuizAction,
 } from '../actions'
+import QuizScore from './QuizScore'
+
 
 /**
 TODO:
-Increment score and show percentage.
 */
 
 class FlashCard extends Component{
@@ -54,6 +56,7 @@ class FlashCard extends Component{
     let deck = getDeckReducer.deck.questions.forEach((card, index) => {
         if(!_.isEmpty(card) && card.cardId === getCardReducer.cardId){
           this.setState({
+            deckId: getDeckReducer.deck.deckId,
             card: card,
             deckLength: getDeckReducer.deck.questions.length,
             cardIndex: index,
@@ -65,33 +68,15 @@ class FlashCard extends Component{
     })//.forEach()
   }//componentWillMount()
 
-  componentDidMount(){
-    // BackHandler.addEventListener("hardwareBackPress", this.onBackButtonPressAndroid)
+  componentWillUnmount(){
+    this.clearQuizStats()
   }
 
-  componentWillUnmount(){
+  clearQuizStats(){
     const { dispatch } = this.props
     dispatch(finishQuizAction())
     dispatch(setQuizScoreAction(0))
-    // BackHandler.removeEventListener("hardwareBackPress", this.onBackButtonPressAndroid)
-
   }
-
-  // onBackButtonPressAndroid = () => {
-  //   const {dispatch, quizReducer, navigation} = this.props
-  //   if(this.state.startQuiz){
-  //     dispatch(finishQuizAction())
-  //     dispatch(setQuizScoreAction(0))
-  //     this.setState({
-  //       startQuiz: false,
-  //       quizScore: 0,
-  //     })
-  //     navigation.goBack()
-  //     return true
-  //   }else{
-  //     return false
-  //   }
-  // }
 
   getNextCard(){
     const { cardIndex, deckLength } = this.state
@@ -227,7 +212,7 @@ class FlashCard extends Component{
     }
   }//incorrectAnswer()
 
-  getQuizScore(){
+  getCurrentQuizScore(){
     const { quizReducer } = this.props
     let score = 0
     console.log("L191 FlashCard ", quizReducer.quizScore);
@@ -235,12 +220,28 @@ class FlashCard extends Component{
       score = ((quizReducer.quizScore / this.state.deckLength)*100).toFixed(2)
     }
     return score
-  }//getQuizScore()
+  }//getCurrentQuizScore()
+
+  repeatQuiz(){
+    const { navigation, getDeckReducer, dispatch } = this.props
+
+    this.clearQuizStats()
+    dispatch(getDeckAction(this.state.deckId))
+    if(!_.isEmpty(getDeckReducer.deck) && getDeckReducer.deck.questions.length !== 0){
+      let firstCard = getDeckReducer.deck.questions[0]
+
+      //Get first card in the Deck.
+      dispatch(getCardAction(getDeckReducer.deck.deckId, firstCard))
+
+      dispatch(startQuizAction())
+    }
+    navigation.navigate("FlashCard")
+  }//repeatQuiz()
 
   render(){
     // setTestData()
-    const { front_editable, back_editable, card } = this.state
-    const { quizReducer, getCardReducer, getDeckReducer, navigation } = this.props
+    const { front_editable, back_editable, card, voteCounter, deckLength } = this.state
+    const { dispatch, quizReducer, getCardReducer, getDeckReducer, navigation } = this.props
     // console.log("L112 FlashCard this.props = ", this.props)
     // console.log("L113 FlashCard this.state = ", this.state)
 
@@ -294,6 +295,17 @@ class FlashCard extends Component{
             style={styles.question}
             behavior="padding"
           >
+          { voteCounter === deckLength ?
+            <QuizScore
+              score={this.getCurrentQuizScore()}
+              navigateHome={() => {
+                navigation.navigate("Home")
+                this.clearQuizStats()
+              }}
+              repeatQuiz={() => this.repeatQuiz()}
+            />
+            :
+            <View>
             <Text
               style={{fontSize: 20}}
             >
@@ -325,9 +337,11 @@ class FlashCard extends Component{
                 />
               </View>
             }
+            </View>
+          }
           </KeyboardAvoidingView>
         </ScrollView>
-        { this.state.startQuiz &&
+        { quizReducer.startQuiz &&
           <View style={styles.answer_buttons}>
             <TouchableOpacity
               style={styles.button}
@@ -338,7 +352,7 @@ class FlashCard extends Component{
             <View style={styles.score}>
               <Text style={{fontSize: 20}}>Score: </Text>
               <Text style={{fontSize: 20}}>
-                {this.getQuizScore()} %
+                {this.getCurrentQuizScore()} %
               </Text>
             </View>
             <TouchableOpacity
