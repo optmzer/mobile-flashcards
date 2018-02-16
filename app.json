@@ -11,6 +11,9 @@
       "icon": "./icons/icons8-questions-50.png"
     },
     "githubUrl": "https://github.com/optmzer/mobile-flashcards",
+    "ios": {
+      "bundleIdentifier": "org.flashcardswarehouse.exp"
+    },
     "android": {
       "package": "org.flashcardswarehouse.exp"
     }
