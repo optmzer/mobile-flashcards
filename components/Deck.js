@@ -25,9 +25,7 @@ Rename Deck title,
 class Deck extends Component{
 
   //TODO:
-  // componentWillReceiveNewProps(){
-  //
-  // }
+
 
 deleteDeck(){
   const { getDeckReducer, dispatch } = this.props
@@ -36,7 +34,6 @@ deleteDeck(){
 
 componentDidMount(){
   const { navigation, dispatch } = this.props
-  // dispatch(getDeckAction(navigation.state.params.deck.deckId))
   /**If a Deck was opende
   that means user did study. Cancel all notifications for today
   */
@@ -106,10 +103,8 @@ _renderItem = ({item}) => {
     }
     return(
       <View style={styles.container}>
-        <Text style={styles.containerText}>
-          Title: {title}
-        </Text>
-        <Text style={styles.containerText}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={{fontSize: 18, marginLeft: 10}}>
           Cards: {numbOfCards}
         </Text>
         <FlatList
@@ -159,6 +154,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
   },
+  title: {
+    fontSize: 25,
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
   containerText: {
     fontSize: 20,
   },
@@ -172,6 +172,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   questionList: {
+    marginLeft: 10,
+    marginRight: 10,
     fontSize: 20,
     paddingTop: 20,
     paddingBottom: 20,

@@ -269,44 +269,51 @@ class FlashCard extends Component{
         behavior="padding"
       >
         <View style={styles.deck_title}>
-          <Text style={{fontSize: 27}}>
-            Deck: {getDeckReducer.deck && getDeckReducer.deck.title}
-          </Text>
-
-          {
-            !this.state.front_editable
-            ?
-            <View>
-              <TouchableOpacity
-                onPress={() => this.deleteCard()}
-                style={styles.edit_icon}>
-                <MaterialIcons name="delete-forever" size={30}/>
-                <Text>Delete</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.edit_icon}
-                onPress={() => this.setFrontEditable()}
-              >
-                <FontAwesome name="pencil-square-o" size={30}/>
-                <Text>Edit</Text>
-              </TouchableOpacity>
-            </View>
-            :
-            <View>
-              <TouchableOpacity
-                onPress={() => this.saveChanges()}
-              >
-                <FontAwesome name="save" size={30}/>
-                <Text>Save</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => this.cancelChanges()}
-              >
-                <FontAwesome name="close" size={30}/>
-                <Text>Cancel</Text>
-              </TouchableOpacity>
-            </View>
-          }
+          <View style={styles.titleView}>
+            <Text style={styles.titleText}>
+              {getDeckReducer.deck && getDeckReducer.deck.title}
+            </Text>
+          </View>
+          { !this.state.startQuiz &&
+          <View style={styles.editableControls}>
+            {
+              !this.state.front_editable
+              ?
+              <View style={styles.editable}>
+                <TouchableOpacity
+                  onPress={() => this.deleteCard()}
+                  style={styles.editableIcons}>
+                  <MaterialIcons name="delete-forever" size={30}/>
+                  <Text>Delete</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.editableIcons}
+                  onPress={() => this.setFrontEditable()}
+                >
+                  <FontAwesome name="pencil-square-o" size={30}/>
+                  <Text>Edit</Text>
+                </TouchableOpacity>
+              </View>
+              :
+              <View style={styles.editable}>
+                <TouchableOpacity
+                  style={styles.editableIcons}
+                  onPress={() => this.saveChanges()}
+                >
+                  <FontAwesome name="save" size={30}/>
+                  <Text>Save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.editableIcons}
+                  onPress={() => this.cancelChanges()}
+                >
+                  <FontAwesome name="close" size={30}/>
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            }
+          </View>
+        }
         </View>
         <ScrollView style={{flex: 1}}>
           <KeyboardAvoidingView
@@ -324,11 +331,7 @@ class FlashCard extends Component{
             />
             :
             <View>
-            <Text
-              style={{fontSize: 20}}
-            >
-              Question:
-            </Text>
+            <Text style={styles.textInputHeaders}>Question</Text>
             <TextInput
               style={styles.textInput}
               multiline = {true}
@@ -340,11 +343,7 @@ class FlashCard extends Component{
             {
               this.state.toggleAnswer &&
               <View>
-                <Text
-                  style={{fontSize: 20}}
-                >
-                  Answer:
-                </Text>
+                <Text style={styles.textInputHeaders}>Answer</Text>
                 <TextInput
                   style={styles.textInput}
                   multiline = {true}
@@ -431,15 +430,39 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   deck_title: {
+    marginLeft: 10,
     flexDirection: "row",
     borderBottomWidth: 1,
     justifyContent: "space-between",
   },
-  edit_icon: {
-    alignSelf: "center",
+  titleView: {
+    flex: 3,
+  },
+  titleText: {
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  editableControls: {
+    flex: 2,
+  },
+  editable: {
+    flexDirection: "row",
+    marginTop: 5,
+    marginBottom: 5,
+    justifyContent: "space-around",
+  },
+  editableIcons: {
+    alignItems: "center",
+    // marginRight: 20,
+  },
+  textInputHeaders: {
+    fontSize: 20,
+    marginLeft: 10,
+    textDecorationLine: "underline",
   },
   textInput: {
-    // marginTop: 5,
+    marginLeft: 10,
+    marginRight: 10,
     fontSize: 25,
   },
   answer_buttons:{

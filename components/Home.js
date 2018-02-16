@@ -7,7 +7,7 @@ import {
   StyleSheet,
   AsyncStorage,
 } from 'react-native'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { getAllDecks, convertObjectToArray, setTestData } from '../utils/helpers'
 import {FLASH_CARD_STORAGE_KEY} from '../utils/api'
 import * as Action from '../actions'
@@ -36,15 +36,18 @@ class Home extends Component {
           item.title
           ?
             <TouchableOpacity
+              style={styles.deck}
               onPress={() => {
                 dispatch(Action.getDeckAction(item.deckId))
                 this.props.navigation.navigate('Deck')}
               }
             >
-              <View>
-                <Text>Title: {item.title}</Text>
-                <Text>No of Cards {item.questions.length}</Text>
-                <Text>Date Modified</Text>
+              <View style={{flex: 7, marginLeft: 10}}>
+                <Text style={styles.deckText}>{item.title}</Text>
+                <Text style={{fontSize: 18}}>Cards {item.questions.length}</Text>
+              </View>
+              <View style={{flex: 1}}>
+                <MaterialIcons name="keyboard-arrow-right" size={35}/>
               </View>
             </TouchableOpacity>
           :
@@ -89,9 +92,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   deckListItem: {
-    height: 100,
     borderBottomWidth: 1,
-  }
+    justifyContent: "center",
+  },
+  deck: {
+    marginTop: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  deckText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
 })
 
 function mapStateToProps(state){

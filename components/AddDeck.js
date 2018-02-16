@@ -113,6 +113,8 @@ const styles = StyleSheet.create({
   },//container
   deckTitle: {
     marginTop: 30,
+    marginLeft: 10,
+    marginRight: 10, 
     fontSize: 25,
     height: 60
   },//deckTitle

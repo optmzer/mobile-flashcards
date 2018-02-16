@@ -24,8 +24,6 @@ import Deck from './components/Deck'
 import AddCard from './components/AddCard'
 import { setLocalNotification } from './utils/helpers'
 
-console.ignoredYellowBox = ['Remote debugger']
-
 const store = createStore(
   reducers,
   compose(
@@ -110,8 +108,8 @@ const HomeNavigator = StackNavigator({
     screen: FlashCard,
     navigationOptions: {
       // headerLeft: <MaterialIcons name-"arrow-left" size={30}/>,
-      headerRight: <MaterialIcons name="menu" size={30}/>,
-      title: "FlashCard",
+      // headerRight: <MaterialIcons name="menu" size={30}/>,
+      title: "Flash Card",
       headerTintColor: "#2b94e5",
       headerStyle: {
         //backgroundColor: "",
@@ -147,8 +145,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
 })
 
