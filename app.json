@@ -1,5 +1,18 @@
 {
   "expo": {
-    "sdkVersion": "25.0.0"
+    "sdkVersion": "25.0.0",
+    "orientation": "portrait",
+    "name": "FlashCards Warehouse",
+    "description": "Best flash card app",
+    "slug": "flashcardswarehouse",
+    "version": "1.0",
+    "icon": "./icons/icons8-questions-1024.png",
+    "notification": {
+      "icon": "./icons/icons8-questions-50.png"
+    },
+    "githubUrl": "https://github.com/optmzer/mobile-flashcards",
+    "android": {
+      "package": "org.flashcardswarehouse.exp"
+    }
   }
 }
