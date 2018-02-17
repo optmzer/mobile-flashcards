@@ -66,10 +66,10 @@ class Home extends Component {
     // console.log("L80 Home this.props = ", this.props)
 
     const { decks } = this.props.getAllDecksReducer
-    // console.log("L66 Home decks = ", decks)
+    // console.log("L69 Home decks = ", decks)
     return(
       <View style={styles.continer}>
-        { decks
+        { decks && decks.length
           ?
            <FlatList
             data={decks}

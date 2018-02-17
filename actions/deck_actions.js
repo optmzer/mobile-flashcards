@@ -111,24 +111,32 @@ function deleteDeck(){
 }//deleteDeck()
 
 export function addNewDeckAction(deck){
-  // console.log("L47 addNewDeckAction deck = ", deck)
+  // console.log("L114 addNewDeckAction deck = ", deck)
   return function(dispatch){
     //get Decks from storage and stringify them
     AsyncStorage.getItem(
       FLASH_CARD_STORAGE_KEY,
       (err, decks) => {
         if (err) { //show errors if any
-          return console.error("L74 addNewDeckAction. Cannot add new Deck ", err)
+          return console.error("L121 addNewDeckAction. Cannot add new Deck ", err)
         }
         //Add deck to an object
         let newDecks = JSON.parse(decks)
-        newDecks[deck.title] = deck
-        // console.log("L82 addNewDeckAction = ", newDecks)
+        if(newDecks === null){
+          newDecks = {
+            [deck.title] : {
+              deck
+            }
+          }
+        } else {
+          newDecks[deck.title] = deck
+        }
+        // console.log("L134 addNewDeckAction = ", newDecks)
         //Write into AsyncStorage
         AsyncStorage.setItem(
           FLASH_CARD_STORAGE_KEY,
           JSON.stringify(newDecks),
-          (err) => err ? console.error("L84 addNewDeckAction error writing Deck to storage", err) : null
+          (err) => err ? console.error("L131 addNewDeckAction error writing Deck to storage", err) : null
         )
       return dispatch(getDeck(deck))
     }) //Do stuff with data.

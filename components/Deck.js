@@ -34,7 +34,7 @@ deleteDeck(){
 
 componentDidMount(){
   const { navigation, dispatch } = this.props
-  /**If a Deck was opende
+  /**If a Deck was opened
   that means user did study. Cancel all notifications for today
   */
   clearLocalNotification()
@@ -73,8 +73,12 @@ _renderItem = ({item}) => {
         <TouchableOpacity
           onPress={() => this.getCard(item)}
         >
-          <View>
+          <View style={styles.questionEntryView}>
             <Text style={styles.questionList}>Q: {item.question}</Text>
+            <MaterialIcons
+              style={styles.questionIcon}
+              name="touch-app"
+              size={30}/>
           </View>
         </TouchableOpacity>
         :
@@ -171,14 +175,23 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
   },
-  questionList: {
+  questionEntryView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
     marginLeft: 10,
     marginRight: 10,
+  },
+  questionList: {
+    flex: 7,
     fontSize: 20,
     paddingTop: 20,
     paddingBottom: 20,
-    borderBottomWidth: 1,
   },
+  questionIcon: {
+    flex: 1,
+  }
 })
 
 function mapStateToProps(state){

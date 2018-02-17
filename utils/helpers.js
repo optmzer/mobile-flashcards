@@ -11,44 +11,49 @@ export function convertObjectToArray(obj){
           })
 }
 
-export function setTestData(){
-  AsyncStorage.removeItem(FLASH_CARD_STORAGE_KEY)
-  return AsyncStorage.setItem(FLASH_CARD_STORAGE_KEY, JSON.stringify(cardStorage))
-}//setTestData()
-
-export const cardStorage = {
-  React: {
-    deckId: Date.now() + "#!React",
-    title: 'React',
-    questions: [
-      {
-        cardId: 1,
-        question: 'What is React?',
-        answer: 'A library for managing user interfaces'
-      },
-      {
-        cardId: 2,
-        question: 'Where do you make Ajax requests in React?',
-        answer: 'The componentDidMount lifecycle event'
-      }
-    ]
-  },
-  JavaScript: {
-    deckId: Date.now() + "#!JavaScript",
-    title: 'JavaScript',
-    questions: [
-      {
-        cardId: 3,
-        question: 'What is a closure?',
-        answer: 'The combination of a function and the lexical environment within which that function was declared.'
-      }
-    ]
-  }
-}//const cardStorage
+// export function setTestData(){
+//   AsyncStorage.removeItem(FLASH_CARD_STORAGE_KEY)
+//   return AsyncStorage.setItem(FLASH_CARD_STORAGE_KEY, JSON.stringify(cardStorage))
+// }//setTestData()
+//
+// export const cardStorage = {
+//   React: {
+//     deckId: Date.now() + "#!React",
+//     title: 'React',
+//     questions: [
+//       {
+//         cardId: 1,
+//         question: 'What is React?',
+//         answer: 'A library for managing user interfaces'
+//       },
+//       {
+//         cardId: 2,
+//         question: 'Where do you make Ajax requests in React?',
+//         answer: 'The componentDidMount lifecycle event'
+//       }
+//     ]
+//   },
+//   JavaScript: {
+//     deckId: Date.now() + "#!JavaScript",
+//     title: 'JavaScript',
+//     questions: [
+//       {
+//         cardId: 3,
+//         question: 'What is a closure?',
+//         answer: 'The combination of a function and the lexical environment within which that function was declared.'
+//       }
+//     ]
+//   }
+// }//const cardStorage
 
 export function clearLocalNotification(){
-  return AsyncStorage.removeItem(FLASH_CARD_NOTIFICATIONS_KEY)
-          .then(Notifications.cancelAllScheduledNotificationsAsync())
+  return AsyncStorage.removeItem(FLASH_CARD_NOTIFICATIONS_KEY, (err) => {
+    if(err === null){
+      Notifications.cancelAllScheduledNotificationsAsync()
+    } else {
+      console.error("Error in clearLocalNotification - ", err)
+    }
+  })
 }
 
 function createNotification(){
@@ -71,7 +76,6 @@ export function setLocalNotification(){
   AsyncStorage.getItem(
     FLASH_CARD_NOTIFICATIONS_KEY,
     (err, data) => {
-      console.log("L74 helpers getting notification key. data = ", data)
       let notifications = JSON.parse(data)
       if(err){
         console.error("L73 helpers Error geting Item from AsyncStorage.", err)
