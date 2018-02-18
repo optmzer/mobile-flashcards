@@ -30,11 +30,8 @@ class Home extends Component {
     const { dispatch } = this.props
 
     return (
-
       <View style={styles.deckListItem}>
-        {
-          item.title
-          ?
+
             <TouchableOpacity
               style={styles.deck}
               onPress={() => {
@@ -50,12 +47,7 @@ class Home extends Component {
                 <MaterialIcons name="keyboard-arrow-right" size={35}/>
               </View>
             </TouchableOpacity>
-          :
-            <View>
-              <Text>The list is empty</Text>
-              <Text>Add more decks</Text>
-            </View>
-        }
+            
       </View>
     )
   }
@@ -69,7 +61,7 @@ class Home extends Component {
     // console.log("L69 Home decks = ", decks)
     return(
       <View style={styles.continer}>
-        { decks && decks.length
+        { decks && decks.length > 0
           ?
            <FlatList
             data={decks}

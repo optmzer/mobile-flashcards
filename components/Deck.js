@@ -40,10 +40,10 @@ componentDidMount(){
   clearLocalNotification()
 }
 
-getCard(card){
+getCard(card, quizOrFalashCard){
   const { navigation, dispatch, getDeckReducer } = this.props
   dispatch(getCardAction(getDeckReducer.deck.deckId, card))
-  navigation.navigate("FlashCard")
+  navigation.navigate(quizOrFalashCard)
 }
 
 startQuiz(){
@@ -53,7 +53,7 @@ startQuiz(){
     let firstCard = getDeckReducer.deck.questions[0]
     dispatch(startQuizAction())
     //Get first card in the Deck.
-    this.getCard(firstCard)
+    this.getCard(firstCard, "Quiz")
   }
 }
 
@@ -71,7 +71,7 @@ _renderItem = ({item}) => {
         !_.isEmpty(item)
         ?
         <TouchableOpacity
-          onPress={() => this.getCard(item)}
+          onPress={() => this.getCard(item, "FlashCard")}
         >
           <View style={styles.questionEntryView}>
             <Text style={styles.questionList}>Q: {item.question}</Text>

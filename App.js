@@ -22,6 +22,7 @@ import FlashCard from './components/FlashCard'
 import AddDeck from './components/AddDeck'
 import Deck from './components/Deck'
 import AddCard from './components/AddCard'
+import Quiz from './components/Quiz'
 import { setLocalNotification } from './utils/helpers'
 
 const store = createStore(
@@ -116,6 +117,13 @@ const HomeNavigator = StackNavigator({
       },
     } //navigationOptions
   }, //FlashCard
+  Quiz: {
+    screen: Quiz,
+    navigationOptions: {
+      title: "Quiz",
+
+    }
+  },//Quiz
 })
 
 // <FlashCard />
