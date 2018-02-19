@@ -136,9 +136,12 @@ export function addNewDeckAction(deck){
         AsyncStorage.setItem(
           FLASH_CARD_STORAGE_KEY,
           JSON.stringify(newDecks),
-          (err) => err ? console.error("L131 addNewDeckAction error writing Deck to storage", err) : null
+          (err) => {err
+            ? console.error("L131 addNewDeckAction error writing Deck to storage", err)
+            : dispatch(getDeck(deck))
+          }
         )
-      return dispatch(getDeck(deck))
+      return dispatch(getAllDecksAction())
     }) //Do stuff with data.
   }
 }

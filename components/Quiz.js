@@ -9,6 +9,7 @@ import {
   Switch,
   ScrollView,
 } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import {
   FontAwesome,
   MaterialIcons,
@@ -29,7 +30,7 @@ Has a bug???
 Home button needs to be pressed 2 times before it let you go Home.
 Do not know how to fix yet.
 TODO:
-When quiz runs disable edit/delete buttons.
+
 */
 
 class Quiz extends Component{
@@ -37,8 +38,6 @@ class Quiz extends Component{
   state = {
     disabledNextCardBtn: false,
     disabledPrevCardBtn: false,
-    front_editable: false,
-    back_editable: false,
     card: {},
     deckLength: 0,
     cardIndex: 0,
@@ -48,6 +47,7 @@ class Quiz extends Component{
     startQuiz: false,
     quizScore: 0,
     voteCounter: 0,
+    restartOnce: 1,
   }
 
   componentWillMount(){
@@ -68,13 +68,9 @@ class Quiz extends Component{
   }//componentWillMount()
 
   componentWillUnmount(){
-    this.clearQuizStats()
-  }
-
-  clearQuizStats(){
-    const { dispatch } = this.props
-    dispatch(finishQuizAction())
-    dispatch(setQuizScoreAction(0))
+    this.setState({
+      restartOnce: 1
+    })
   }
 
   getNextCard(){
@@ -143,8 +139,6 @@ class Quiz extends Component{
     }
 
     if(voteCounter === deckLength - 1){
-      // console.log("L224 FlashCard voteCounter = ", voteCounter)
-      // console.log("L225 FlashCard deckLength = ", deckLength)
       dispatch(finishQuizAction())
     }
   }//incorrectAnswer()
@@ -152,7 +146,6 @@ class Quiz extends Component{
   getCurrentQuizScore(){
     const { quizReducer } = this.props
     let score = 0
-    // console.log("L231 FlashCard ", quizReducer.quizScore);
     if(quizReducer.quizScore){//If it is a number
       score = ((quizReducer.quizScore / this.state.deckLength)*100).toFixed(2)
     }
@@ -162,25 +155,47 @@ class Quiz extends Component{
   repeatQuiz(){
     const { navigation, getDeckReducer, dispatch } = this.props
 
-    this.clearQuizStats()
-    dispatch(getDeckAction(this.state.deckId))
-    if(!_.isEmpty(getDeckReducer.deck) && getDeckReducer.deck.questions.length !== 0){
+    const replaceAction = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: "Deck" })]
+    })
+
+
+    // if(!_.isEmpty(getDeckReducer.deck) && getDeckReducer.deck.questions.length !== 0){
+    if(this.state.restartOnce === 1){
       let firstCard = getDeckReducer.deck.questions[0]
 
       //Get first card in the Deck.
       dispatch(getCardAction(getDeckReducer.deck.deckId, firstCard))
       dispatch(startQuizAction())
+      navigation.state.key ? this.props.navigation.dispatch(replaceAction) : null
+      navigation.navigate("Quiz")
     }
-    navigation.navigate("Quiz")
-    console.log("L257 FlashCard repeatQuiz()")
+
+    this.setState({
+      restartOnce: 0
+    })
+    // }
   }//repeatQuiz()
+
+  navigateHome(){
+    const { navigation } = this.props
+
+    const replaceAction = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: "Home" })]
+    })
+
+    navigation.state.key ? this.props.navigation.dispatch(replaceAction) : null
+    navigation.navigate("Home")
+  }
 
   render(){
     // setTestData()
-    const { front_editable, back_editable, card, voteCounter, deckLength } = this.state
+    const { card, voteCounter, deckLength } = this.state
     const { dispatch, quizReducer, getCardReducer, getDeckReducer, navigation } = this.props
-    // console.log("L112 FlashCard this.props = ", this.props)
-    // console.log("L113 FlashCard this.state = ", this.state)
+    // console.log("L204 Quiz this.props = ", this.props.quizReducer)
+    // console.log("L205 Quiz this.state = ", this.state)
 
     return(
       <View
@@ -229,7 +244,6 @@ class Quiz extends Component{
                 style={styles.textInput}
                 multiline = {true}
                 numberOfLines = {3}
-                editable={front_editable}
                 onChangeText={(questionValue) => this.setState({questionValue})}
                 value={this.state.questionValue}
               />
@@ -241,7 +255,6 @@ class Quiz extends Component{
                     style={styles.textInput}
                     multiline = {true}
                     numberOfLines = {3}
-                    editable={front_editable}
                     onChangeText={(answerValue) => this.setState({answerValue})}
                     value={this.state.answerValue}
                   />
@@ -292,16 +305,17 @@ class Quiz extends Component{
           <TouchableOpacity
             style={styles.controlsBtn}
           >
-            <FontAwesome
-              name="home"
-              size={30}
-              onPress={() => {
-                navigation.navigate("Home")
-                this.clearQuizStats()
-                console.log("L418 FlashCard Home Button Pressed")
-              }}
-            />
-            <Text>Home</Text>
+            <View>
+              <FontAwesome
+                name="home"
+                size={30}
+                onPress={() => {
+                  console.log("L324 Quiz Home Button Pressed")
+                  this.navigateHome()}
+                }
+              />
+              <Text>Home</Text>
+            </View>
           </TouchableOpacity>
         }
           <TouchableOpacity
@@ -315,15 +329,17 @@ class Quiz extends Component{
           <TouchableOpacity
             style={styles.controlsBtn}
           >
-            <FontAwesome
-              name="rotate-right"
-              size={30}
-              onPress={() => {
-                this.repeatQuiz()
-                console.log("L448 FlashCard Repeat Button Pressed")
-              }}
-            />
-            <Text>Repeat</Text>
+            <View>
+              <FontAwesome
+                name="rotate-right"
+                size={30}
+                onPress={() => {
+                  console.log("L323 Quiz Repeat Button Pressed")
+                  this.repeatQuiz()
+                }}
+              />
+              <Text>Repeat</Text>
+            </View>
           </TouchableOpacity>
         }
         </View>

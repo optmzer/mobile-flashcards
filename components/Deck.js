@@ -9,6 +9,7 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import {
   getCardAction,
   deleteCardAction,
@@ -18,18 +19,21 @@ import {
 } from '../actions'
 import { clearLocalNotification } from '../utils/helpers'
 
-/**TODO: Add TabDrawer to edit deck ???
-Add card,
+/**TODO:
+
 Rename Deck title,
 */
 class Deck extends Component{
 
-  //TODO:
-
-
 deleteDeck(){
-  const { getDeckReducer, dispatch } = this.props
+  const { getDeckReducer, dispatch, navigation } = this.props
   dispatch(deleteDeckAction(getDeckReducer.deck.deckId))
+
+  const replaceAction = NavigationActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({ routeName: "Home" })]
+  })
+  navigation.state.key ? this.props.navigation.dispatch(replaceAction) : null
 }
 
 componentDidMount(){
@@ -64,6 +68,7 @@ _keyExtractor = (item, index) => {
 _renderItem = ({item}) => {
 
   const { navigation, dispatch } = this.props
+  // console.log("L71 Deck this.props.navigation.state = ", navigation.state)
 
   return (
     <View>
@@ -78,6 +83,7 @@ _renderItem = ({item}) => {
             <MaterialIcons
               style={styles.questionIcon}
               name="touch-app"
+              color="#808080"
               size={30}/>
           </View>
         </TouchableOpacity>
@@ -90,7 +96,6 @@ _renderItem = ({item}) => {
     </View>
   )
 }//_renderItem()
-
 
   render(){
 
@@ -180,6 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderBottomWidth: 1,
+    borderColor: "#A0A0A0",
     marginLeft: 10,
     marginRight: 10,
   },

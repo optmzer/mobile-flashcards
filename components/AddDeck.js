@@ -1,6 +1,7 @@
-/**TODO: Align icons vertically.
-Hook up Save button
-key board blocks buttons.
+/**TODO:
+Bug report when building and saving new deck it saves without title,
+but the next one saves correctly???
+I'm having some wierd bugs witht each build.???
 */
 
 import React, { Component } from 'react'
@@ -29,7 +30,7 @@ class AddDeck extends Component{
     disabled: true,
   }
 
-  cancelAddDeck(){
+  clearTextInput(){
     this.setState({
       text: "",
       disabled: true,
@@ -50,11 +51,11 @@ class AddDeck extends Component{
       title: this.state.text,
       questions: []
     }
-    Keyboard.dismiss()//Dismiss Keyboard on submit.
     dispatch(addNewDeckAction(deck))
-
+    Keyboard.dismiss()//Dismiss Keyboard on submit.
+    //TODO: Remove props from the navigation and use reducers.
     navigation.navigate("Deck", {deck: deck})
-    this.cancelAddDeck()
+    this.clearTextInput()
   }//saveDeck()
 
   render(){
@@ -92,7 +93,7 @@ class AddDeck extends Component{
             <TouchableOpacity
               style={styles.controlsBtn}
               onPress={() => {
-                this.cancelAddDeck()
+                this.clearTextInput()
                 navigation.goBack()
               }}
             >
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
   deckTitle: {
     marginTop: 30,
     marginLeft: 10,
-    marginRight: 10, 
+    marginRight: 10,
     fontSize: 25,
     height: 60
   },//deckTitle

@@ -39,15 +39,15 @@ class Home extends Component {
                 this.props.navigation.navigate('Deck')}
               }
             >
-              <View style={{flex: 7, marginLeft: 10}}>
+              <View style={{flex: 7}}>
                 <Text style={styles.deckText}>{item.title}</Text>
-                <Text style={{fontSize: 18}}>Cards {item.questions.length}</Text>
+                <Text style={{fontSize: 18}}>Cards {item.questions ? item.questions.length : 0}</Text>
               </View>
               <View style={{flex: 1}}>
-                <MaterialIcons name="keyboard-arrow-right" size={35}/>
+                <MaterialIcons name="keyboard-arrow-right" color="#808080" size={35}/>
               </View>
             </TouchableOpacity>
-            
+
       </View>
     )
   }
@@ -56,6 +56,8 @@ class Home extends Component {
 
     // console.log("L79 Home this.state = ", this.state)
     // console.log("L80 Home this.props = ", this.props)
+
+    // console.log("L60 Home this.props.navigation.state = ", this.props.navigation.state)
 
     const { decks } = this.props.getAllDecksReducer
     // console.log("L69 Home decks = ", decks)
@@ -84,8 +86,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   deckListItem: {
-    borderBottomWidth: 1,
+    marginLeft: 10,
     justifyContent: "center",
+    borderBottomWidth: 1,
+    borderColor: "#A0A0A0",
   },
   deck: {
     marginTop: 10,

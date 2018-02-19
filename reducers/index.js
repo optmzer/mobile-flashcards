@@ -51,19 +51,20 @@ function quizReducer(state, action){
       return {
         ...state,
         startQuiz: true,
-        showScore: false,
+        // showScore: false,
+        quizScore: 0,
       }
     case TYPES.FINISH_QUIZ:
       return {
         ...state,
         startQuiz: false,
-        showScore: true,
+        // showScore: true,
       }
-    case TYPES.HIDE_SCORE:
-      return {
-        ...state,
-        showScore: true,
-      }
+    // case TYPES.HIDE_SCORE:
+    //   return {
+    //     ...state,
+    //     showScore: true,
+    //   }
     case TYPES.SET_QUIZ_SCORE:
       return {
         ...state,

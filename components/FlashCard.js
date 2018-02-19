@@ -25,9 +25,6 @@ import {
 
 /**
 TODO:
-Has a bug???
-Home button needs to be pressed 2 times before it let you go Home.
-Do not know how to fix yet.
 */
 
 class FlashCard extends Component{
@@ -335,6 +332,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 10,
     textDecorationLine: "underline",
+    color: "#808080",
   },
   textInput: {
     marginLeft: 10,
