@@ -1,4 +1,4 @@
-#Mobile FlashCards Warehouse
+# Mobile FlashCards Warehouse
 
 Udacity study project for React nano-degree.
 An Android application to create simple text flash cards. The app has
