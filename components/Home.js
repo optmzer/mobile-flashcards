@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { getAllDecks, convertObjectToArray, setTestData } from '../utils/helpers'
-import {FLASH_CARD_STORAGE_KEY} from '../utils/api'
 import * as Action from '../actions'
 import { connect } from 'react-redux'
 
@@ -31,23 +30,23 @@ class Home extends Component {
 
     return (
       <View style={styles.deckListItem}>
-
-            <TouchableOpacity
-              style={styles.deck}
-              onPress={() => {
-                dispatch(Action.getDeckAction(item.deckId))
-                this.props.navigation.navigate('Deck')}
-              }
-            >
-              <View style={{flex: 7}}>
-                <Text style={styles.deckText}>{item.title}</Text>
-                <Text style={{fontSize: 18}}>Cards {item.questions ? item.questions.length : 0}</Text>
-              </View>
-              <View style={{flex: 1}}>
-                <MaterialIcons name="keyboard-arrow-right" color="#808080" size={35}/>
-              </View>
-            </TouchableOpacity>
-
+        { item.title &&
+          <TouchableOpacity
+            style={styles.deck}
+            onPress={() => {
+              dispatch(Action.getDeckAction(item.deckId))
+              this.props.navigation.navigate('Deck')}
+            }
+          >
+            <View style={{flex: 7}}>
+              <Text style={styles.deckText}>{item.title}</Text>
+              <Text style={{fontSize: 18}}>Cards {item.questions ? item.questions.length : 0}</Text>
+            </View>
+            <View style={{flex: 1}}>
+              <MaterialIcons name="keyboard-arrow-right" color="#808080" size={35}/>
+            </View>
+          </TouchableOpacity>
+        }
       </View>
     )
   }

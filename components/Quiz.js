@@ -8,6 +8,8 @@ import {
   StyleSheet,
   Switch,
   ScrollView,
+  Button,
+  TouchableHighlight,
 } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import {
@@ -302,21 +304,21 @@ class Quiz extends Component{
           style={styles.cardNavigation}
         >
         { voteCounter === deckLength &&
-          <TouchableOpacity
+          <TouchableOpacity 
             style={styles.controlsBtn}
-          >
+            onPress={() => {
+              console.log("L324 Quiz Home Button Pressed")
+                this.navigateHome()}
+              }
+            >
             <View>
               <FontAwesome
                 name="home"
                 size={30}
-                onPress={() => {
-                  console.log("L324 Quiz Home Button Pressed")
-                  this.navigateHome()}
-                }
-              />
+                />
               <Text>Home</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity >
         }
           <TouchableOpacity
             disabled={true}
@@ -326,21 +328,21 @@ class Quiz extends Component{
             </Text>
           </TouchableOpacity>
         { voteCounter === deckLength &&
-          <TouchableOpacity
+          <TouchableOpacity 
             style={styles.controlsBtn}
-          >
+            onPress={() => {
+              console.log("L323 Quiz Repeat Button Pressed")
+                this.repeatQuiz()
+            }}
+            >
             <View>
               <FontAwesome
                 name="rotate-right"
                 size={30}
-                onPress={() => {
-                  console.log("L323 Quiz Repeat Button Pressed")
-                  this.repeatQuiz()
-                }}
               />
               <Text>Repeat</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity >
         }
         </View>
       </View>
