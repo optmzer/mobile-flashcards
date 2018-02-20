@@ -123,11 +123,8 @@ export function addNewDeckAction(deck){
         //Add deck to an object
         let newDecks = JSON.parse(decks)
         if(newDecks === null){
-          newDecks = {
-            [deck.title] : {
-              deck
-            }
-          }
+          newDecks = { }
+          newDecks[deck.title] = deck
         } else {
           newDecks[deck.title] = deck
         }

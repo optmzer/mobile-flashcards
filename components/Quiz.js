@@ -306,10 +306,7 @@ class Quiz extends Component{
         { voteCounter === deckLength &&
           <TouchableOpacity 
             style={styles.controlsBtn}
-            onPress={() => {
-              console.log("L324 Quiz Home Button Pressed")
-                this.navigateHome()}
-              }
+            onPress={() => this.navigateHome()}
             >
             <View>
               <FontAwesome
@@ -330,10 +327,7 @@ class Quiz extends Component{
         { voteCounter === deckLength &&
           <TouchableOpacity 
             style={styles.controlsBtn}
-            onPress={() => {
-              console.log("L323 Quiz Repeat Button Pressed")
-                this.repeatQuiz()
-            }}
+            onPress={() => this.repeatQuiz()}
             >
             <View>
               <FontAwesome
@@ -342,7 +336,7 @@ class Quiz extends Component{
               />
               <Text>Repeat</Text>
             </View>
-          </TouchableOpacity >
+          </TouchableOpacity>
         }
         </View>
       </View>

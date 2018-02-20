@@ -53,8 +53,7 @@ class AddDeck extends Component{
     }
     dispatch(addNewDeckAction(deck))
     Keyboard.dismiss()//Dismiss Keyboard on submit.
-    //TODO: Remove props from the navigation and use reducers.
-    navigation.navigate("Deck", {deck: deck})
+    navigation.navigate("Deck")
     this.clearTextInput()
   }//saveDeck()
 

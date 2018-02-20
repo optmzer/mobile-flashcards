@@ -15,7 +15,7 @@ export function convertObjectToArray(obj){
 //   AsyncStorage.removeItem(FLASH_CARD_STORAGE_KEY)
 //   return AsyncStorage.setItem(FLASH_CARD_STORAGE_KEY, JSON.stringify(cardStorage))
 // }//setTestData()
-//
+
 // export const cardStorage = {
 //   React: {
 //     deckId: Date.now() + "#!React",
@@ -33,17 +33,17 @@ export function convertObjectToArray(obj){
 //       }
 //     ]
 //   },
-//   JavaScript: {
-//     deckId: Date.now() + "#!JavaScript",
-//     title: 'JavaScript',
-//     questions: [
-//       {
-//         cardId: 3,
-//         question: 'What is a closure?',
-//         answer: 'The combination of a function and the lexical environment within which that function was declared.'
-//       }
-//     ]
-//   }
+  // JavaScript: {
+  //   deckId: Date.now() + "#!JavaScript",
+  //   title: 'JavaScript',
+  //   questions: [
+  //     {
+  //       cardId: 3,
+  //       question: 'What is a closure?',
+  //       answer: 'The combination of a function and the lexical environment within which that function was declared.'
+  //     }
+  //   ]
+  // }
 // }//const cardStorage
 
 export function clearLocalNotification(){

@@ -25,17 +25,6 @@ Rename Deck title,
 */
 class Deck extends Component{
 
-deleteDeck(){
-  const { getDeckReducer, dispatch, navigation } = this.props
-  dispatch(deleteDeckAction(getDeckReducer.deck.deckId))
-
-  const replaceAction = NavigationActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({ routeName: "Home" })]
-  })
-  navigation.state.key ? this.props.navigation.dispatch(replaceAction) : null
-}
-
 componentDidMount(){
   const { navigation, dispatch } = this.props
   /**If a Deck was opened
@@ -48,6 +37,17 @@ getCard(card, quizOrFalashCard){
   const { navigation, dispatch, getDeckReducer } = this.props
   dispatch(getCardAction(getDeckReducer.deck.deckId, card))
   navigation.navigate(quizOrFalashCard)
+}
+
+deleteDeck(){
+  const { getDeckReducer, dispatch, navigation } = this.props
+  dispatch(deleteDeckAction(getDeckReducer.deck.deckId))
+
+  const replaceAction = NavigationActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({ routeName: "Home" })]
+  })
+  navigation.state.key ? this.props.navigation.dispatch(replaceAction) : null
 }
 
 startQuiz(){
