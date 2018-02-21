@@ -26,39 +26,62 @@ class AddDeck extends Component{
   state = {
     text: "",
     disabled: true,
+    deckAlreadyExist: false,
   }
 
   clearTextInput(){
     this.setState({
       text: "",
       disabled: true,
+      deckAlreadyExist: false,
     })
   }
 
   setText(text){
-    this.setState({
-      text: text,
-      disabled: false,
-    })
+    const { getAllDecksReducer } = this.props 
+      //checks if there is a deck with the same title 
+      let deckExists = getAllDecksReducer.decks.filter(deck => deck.title === text)
+
+      if(deckExists.length == 0){
+        this.setState({
+          text: text,
+          disabled: false,
+          deckAlreadyExist: false,
+        })
+      }else{
+        this.setState({
+          text: text,
+          disabled: true,
+          deckAlreadyExist: true,
+        })
+      }
   }//setText()
 
   saveDeck(){
     const { navigation, dispatch } = this.props
-    let deck = {
+    let newDeck = {
       deckId: Date.now() + "#!" + this.state.text,
       title: this.state.text,
       questions: []
     }
-    dispatch(addNewDeckAction(deck))
+    
+    dispatch(addNewDeckAction(newDeck))
     Keyboard.dismiss()//Dismiss Keyboard on submit.
     navigation.navigate("Deck")
     this.clearTextInput()
   }//saveDeck()
 
-  render(){
+  deckAlreadyExist(){
+    return(
+      <View style={styles.warningTitle}>
+        <Text style={{fontSize: 18}}>Deck with this title already exists.</Text>
+        <Text style={{fontSize: 18}}>Please choose another title.</Text>
+      </View>
+    )
+  }
 
+  render(){
     const { navigation } = this.props
-    const { disabled } = this.state
 
     return(
         <KeyboardAvoidingView
@@ -71,14 +94,17 @@ class AddDeck extends Component{
             value={this.state.text}
             onChangeText={(text) => this.setText(text)}
             multiline = {true}
-            numberOfLines = {4}
+            numberOfLines = {2}
           />
+          { this.state.deckAlreadyExist &&
+            this.deckAlreadyExist()
+          }
           <KeyboardAvoidingView
             behavior="padding"
             style={styles.controls}
           >
             <TouchableOpacity
-              disabled={!this.state.text ? true : false}
+              disabled={this.state.disabled}
               style={styles.controlsBtn}
               onPress={() => this.saveDeck()}
             >
@@ -108,12 +134,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },//container
   deckTitle: {
-    marginTop: 30,
+    marginTop: 10,
     marginLeft: 10,
     marginRight: 10,
     fontSize: 25,
-    height: 60
   },//deckTitle
+  warningTitle: {
+    alignItems: "center",
+  },//warningTitle
   controls: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -124,4 +152,11 @@ const styles = StyleSheet.create({
   },//controlsBtn
 })
 
-export default connect()(AddDeck)
+function mapStateToProps(state){
+  const { getAllDecksReducer } = state
+  return {
+    getAllDecksReducer: getAllDecksReducer
+  }
+}
+
+export default connect(mapStateToProps)(AddDeck)
