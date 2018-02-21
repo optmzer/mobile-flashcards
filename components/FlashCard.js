@@ -24,9 +24,9 @@ import {
 } from '../actions'
 
 /**
-TODO:
-*/
-
+ * Component that displays a flash card question and answer
+ * displays controls for navigation and editing.
+ */
 class FlashCard extends Component{
 
   state = {
@@ -42,6 +42,9 @@ class FlashCard extends Component{
     answerValue: "",
   }
 
+  /**
+   * Gets card data from the reducers
+   */
   componentWillMount(){
     const { getDeckReducer, getCardReducer} = this.props
     let deck = getDeckReducer.deck.questions.forEach((card, index) => {
@@ -168,11 +171,8 @@ class FlashCard extends Component{
   }
 
   render(){
-    // setTestData()
     const { front_editable, back_editable, card, voteCounter, deckLength } = this.state
     const { dispatch, quizReducer, getCardReducer, getDeckReducer, navigation } = this.props
-    // console.log("L112 FlashCard this.props = ", this.props)
-    // console.log("L113 FlashCard this.state = ", this.state)
 
     return(
       <KeyboardAvoidingView

@@ -27,14 +27,10 @@ import {
 } from '../actions'
 
 /**
-TODO:
-Has a bug???
-Home button needs to be pressed 2 times before it let you go Home.
-Do not know how to fix yet.
-TODO:
-
-*/
-
+ * Component that contains Quiz logic and controls
+ * Obtains the first card in the Deck and list through them in leniar fasion.
+ * Displays score when quiz is finished.
+ */
 class Quiz extends Component{
 
   state = {
@@ -52,6 +48,9 @@ class Quiz extends Component{
     restartOnce: 1,
   }
 
+  /**
+   * Obtains the first card in the Deck 
+   */
   componentWillMount(){
     const { getDeckReducer, getCardReducer, quizReducer } = this.props
     let deck = getDeckReducer.deck.questions.forEach((card, index) => {
@@ -69,6 +68,9 @@ class Quiz extends Component{
     })//.forEach()
   }//componentWillMount()
 
+  /**
+   * So it does not open multiple Views of Quiz on multiple push
+   */
   componentWillUnmount(){
     this.setState({
       restartOnce: 1
@@ -112,6 +114,9 @@ class Quiz extends Component{
     })
   }
 
+  /**
+   * Handles correct answer button push
+   */
   correctAnswer(){
     const { dispatch } = this.props
     const { cardIndex, deckLength, voteCounter } = this.state
@@ -130,6 +135,9 @@ class Quiz extends Component{
       }
   }//correctAnswer()
 
+  /**
+   * Handles incorrect button push
+   */
   incorrectAnswer(){
     const { voteCounter, deckLength } = this.state
     const { dispatch } = this.props
@@ -145,6 +153,9 @@ class Quiz extends Component{
     }
   }//incorrectAnswer()
 
+  /**
+   * Returns current score for the quiz
+   */
   getCurrentQuizScore(){
     const { quizReducer } = this.props
     let score = 0
@@ -154,6 +165,9 @@ class Quiz extends Component{
     return score
   }//getCurrentQuizScore()
 
+  /**
+   * Repeats quiz, resets all parameters for new quiz
+   */
   repeatQuiz(){
     const { navigation, getDeckReducer, dispatch } = this.props
 
@@ -162,8 +176,6 @@ class Quiz extends Component{
       actions: [NavigationActions.navigate({ routeName: "Deck" })]
     })
 
-
-    // if(!_.isEmpty(getDeckReducer.deck) && getDeckReducer.deck.questions.length !== 0){
     if(this.state.restartOnce === 1){
       let firstCard = getDeckReducer.deck.questions[0]
 
@@ -177,7 +189,6 @@ class Quiz extends Component{
     this.setState({
       restartOnce: 0
     })
-    // }
   }//repeatQuiz()
 
   navigateHome(){
@@ -193,11 +204,8 @@ class Quiz extends Component{
   }
 
   render(){
-    // setTestData()
     const { card, voteCounter, deckLength } = this.state
     const { dispatch, quizReducer, getCardReducer, getDeckReducer, navigation } = this.props
-    // console.log("L204 Quiz this.props = ", this.props.quizReducer)
-    // console.log("L205 Quiz this.state = ", this.state)
 
     return(
       <View

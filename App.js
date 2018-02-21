@@ -121,12 +121,9 @@ const HomeNavigator = StackNavigator({
     screen: Quiz,
     navigationOptions: {
       title: "Quiz",
-
     }
   },//Quiz
 })
-
-// <FlashCard />
 
 class App extends React.Component {
 

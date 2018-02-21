@@ -16,6 +16,12 @@ export function getCardAction(deckId, card){
   }
 }
 
+/**
+ * 
+ * @param {sting} deckId 
+ * @param {obj} card 
+ * Saves a card into a Deck object in AsyncStorage.
+ */
 export function saveCardAction(deckId, card){
   return function(dispatch){
     //Get the Decks
@@ -60,6 +66,12 @@ function saveCard(card){//This action does not do anything yet
   }
 }
 
+/**
+ * 
+ * @param {string} deckId 
+ * @param {obj} card 
+ * Saves edited card into the same Deck.
+ */
 export function saveEditedCardAction(deckId, card){
   return function(dispatch){
     //Get the Decks
@@ -97,10 +109,12 @@ export function saveEditedCardAction(deckId, card){
   }
 }//saveEditedCardAction()
 
-// function saveEditedCard(card){
-//
-// }
-
+/**
+ * 
+ * @param {string} deckId 
+ * @param {string} cardId 
+ * Delete card from the deck
+ */
 export function deleteCardAction(deckId, cardId){
   return function(dispatch){
     AsyncStorage.getItem(
@@ -127,7 +141,6 @@ export function deleteCardAction(deckId, cardId){
             JSON.stringify(data),
             (err) => err ? console.error("L37 card_actions writing into AsyncStorage", err) : null
           )
-          console.log("L101 deleteCardAction deckId =", deckId)
           dispatch(getDeckAction(deckId))
         }
       }

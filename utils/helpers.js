@@ -5,47 +5,20 @@ export const FLASH_CARD_STORAGE_KEY = "flashcards:decks"
 export const FLASH_CARD_NOTIFICATIONS_KEY = "flashcards:notifications"
 
 
+/**
+ * 
+ * @param {*} obj 
+ * Converts a plain object into an array of objects.
+ */
 export function convertObjectToArray(obj){
   return Object.keys(obj).map(key => {
             return obj[key]
           })
 }
 
-// export function setTestData(){
-//   AsyncStorage.removeItem(FLASH_CARD_STORAGE_KEY)
-//   return AsyncStorage.setItem(FLASH_CARD_STORAGE_KEY, JSON.stringify(cardStorage))
-// }//setTestData()
-
-// export const cardStorage = {
-//   React: {
-//     deckId: Date.now() + "#!React",
-//     title: 'React',
-//     questions: [
-//       {
-//         cardId: 1,
-//         question: 'What is React?',
-//         answer: 'A library for managing user interfaces'
-//       },
-//       {
-//         cardId: 2,
-//         question: 'Where do you make Ajax requests in React?',
-//         answer: 'The componentDidMount lifecycle event'
-//       }
-//     ]
-//   },
-  // JavaScript: {
-  //   deckId: Date.now() + "#!JavaScript",
-  //   title: 'JavaScript',
-  //   questions: [
-  //     {
-  //       cardId: 3,
-  //       question: 'What is a closure?',
-  //       answer: 'The combination of a function and the lexical environment within which that function was declared.'
-  //     }
-  //   ]
-  // }
-// }//const cardStorage
-
+/**
+ * Clears all local notifications with this key.
+ */
 export function clearLocalNotification(){
   return AsyncStorage.removeItem(FLASH_CARD_NOTIFICATIONS_KEY, (err) => {
     if(err === null){
@@ -56,6 +29,9 @@ export function clearLocalNotification(){
   })
 }
 
+/**
+ * Creates notification object
+ */
 function createNotification(){
   return {
     title: "Your daily study reminder.",
@@ -72,6 +48,11 @@ function createNotification(){
   }
 }//createNotification()
 
+/**
+ * Sets notification object in the AsyncStorage at 8am every day 
+ * if a deck is not opened.
+ * Hard coded for now.
+ */
 export function setLocalNotification(){
   AsyncStorage.getItem(
     FLASH_CARD_NOTIFICATIONS_KEY,
@@ -88,7 +69,8 @@ export function setLocalNotification(){
 
               let tomorrowNotice = new Date()
               tomorrowNotice.setDate(tomorrowNotice.getDate() + 1)
-              tomorrowNotice.setHours(11)
+              //Hard coded notification time at 8:00 AM every day.
+              tomorrowNotice.setHours(8)
               tomorrowNotice.setMinutes(0)
 
               Notifications.scheduleLocalNotificationAsync(

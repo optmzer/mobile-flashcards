@@ -1,9 +1,3 @@
-/**TODO:
-Bug report when building and saving new deck it saves without title,
-but the next one saves correctly???
-I'm having some wierd bugs witht each build.???
-*/
-
 import React, { Component } from 'react'
 import {
   View,
@@ -23,6 +17,10 @@ import {
 } from '../actions'
 import { connect } from 'react-redux'
 
+
+/**
+ * Component UI to add new Deck to the Deck list
+ */
 class AddDeck extends Component{
 
   state = {
@@ -61,8 +59,6 @@ class AddDeck extends Component{
 
     const { navigation } = this.props
     const { disabled } = this.state
-
-    // console.log("L71 AddDeck this.textInput = ", this.textInput)
 
     return(
         <KeyboardAvoidingView
@@ -126,10 +122,6 @@ const styles = StyleSheet.create({
   controlsBtn: {
     alignItems: "center",
   },//controlsBtn
-  // contorlDisabled: {
-  //   alignItems: "center",
-  //   opacity: 0.5,
-  // }
 })
 
 export default connect()(AddDeck)

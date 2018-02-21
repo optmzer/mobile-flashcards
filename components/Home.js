@@ -12,20 +12,22 @@ import { getAllDecks, convertObjectToArray, setTestData } from '../utils/helpers
 import * as Action from '../actions'
 import { connect } from 'react-redux'
 
+/**
+ * Lists all decks in the storage.
+ * If no decks found displays prompt to add some
+ */
+
 class Home extends Component {
 
   componentWillMount(){
-    // setTestData() //run only once on every Expo App reload.
     this.props.dispatch(Action.getAllDecksAction())
   }//componentWillMount()
 
   _keyExtractor = (item, index) => {
-    // console.log("L24 Home item.deckId = ", item.deckId)
     return (item.deckId)
   }
 
   _renderItem = ({item}) => {
-    // console.log("L29 Home item = ", item)
     const { dispatch } = this.props
 
     return (
@@ -53,13 +55,7 @@ class Home extends Component {
 
   render(){
 
-    // console.log("L79 Home this.state = ", this.state)
-    // console.log("L80 Home this.props = ", this.props)
-
-    // console.log("L60 Home this.props.navigation.state = ", this.props.navigation.state)
-
     const { decks } = this.props.getAllDecksReducer
-    // console.log("L69 Home decks = ", decks)
     return(
       <View style={styles.continer}>
         { decks && decks.length > 0

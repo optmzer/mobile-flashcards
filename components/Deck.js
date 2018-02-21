@@ -19,20 +19,28 @@ import {
 } from '../actions'
 import { clearLocalNotification } from '../utils/helpers'
 
-/**TODO:
-
-Rename Deck title,
-*/
+/**
+ * Component that displays content of a Deck.
+ * List of questions
+ * and controls.
+ */
 class Deck extends Component{
 
+/**
+ * If a Deck was opened that means user did study. 
+ * Cancel all notifications for today
+ */
 componentDidMount(){
   const { navigation, dispatch } = this.props
-  /**If a Deck was opened
-  that means user did study. Cancel all notifications for today
-  */
   clearLocalNotification()
 }
 
+/**
+ * @param {obj} card 
+ * @param {string} quizOrFalashCard - view in StackNavigator "Quiz" or "FlashCard"
+ * Accepts first card in the deck and navigates to either 
+ * Quiz of FlashCard view.
+ */
 getCard(card, quizOrFalashCard){
   const { navigation, dispatch, getDeckReducer } = this.props
   dispatch(getCardAction(getDeckReducer.deck.deckId, card))
@@ -43,6 +51,7 @@ deleteDeck(){
   const { getDeckReducer, dispatch, navigation } = this.props
   dispatch(deleteDeckAction(getDeckReducer.deck.deckId))
 
+  //reset route so that user could not go back to deleted Deck.
   const replaceAction = NavigationActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: "Home" })]
@@ -50,6 +59,10 @@ deleteDeck(){
   navigation.state.key ? this.props.navigation.dispatch(replaceAction) : null
 }
 
+/**
+ * Gets the first card in the Deck and navigates to Quiz view
+ * Where quiz logic is.
+ */
 startQuiz(){
   const { navigation, dispatch, getDeckReducer } = this.props
 
@@ -61,14 +74,23 @@ startQuiz(){
   }
 }
 
+
+/**
+ * FlatList service function 
+ * Generates unique key for each item to render
+ */
 _keyExtractor = (item, index) => {
   return index
 }//_keyExtractor()
 
+/**
+ * FlatList service function 
+ * Defines how to render each element
+ * item is a question card.
+ */
 _renderItem = ({item}) => {
 
   const { navigation, dispatch } = this.props
-  // console.log("L71 Deck this.props.navigation.state = ", navigation.state)
 
   return (
     <View>
@@ -100,11 +122,11 @@ _renderItem = ({item}) => {
   render(){
 
     const { navigation, getDeckReducer } = this.props
-    // const { deck } = this.props.navigation.state.params
-    // console.log("L81 Deck getDeckReducer = ", getDeckReducer)
+
     let deckId = 0, title = "", numbOfCards = 0, cards = []
 
-    if(!_.isEmpty(getDeckReducer.deck)){//if not empty
+    //if not empty
+    if(!_.isEmpty(getDeckReducer.deck)){
       deckId = getDeckReducer.deck.deckId
       title = getDeckReducer.deck.title
       numbOfCards = getDeckReducer.deck.questions.length
@@ -174,7 +196,6 @@ const styles = StyleSheet.create({
   controls: {
     flexDirection: "row",
     justifyContent: "space-around",
-    // paddingTop: 20,
     paddingBottom: 20,
   },
   button: {

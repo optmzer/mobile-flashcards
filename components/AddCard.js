@@ -15,8 +15,9 @@ import {
   getDeckAction,
 } from '../actions'
 
-//TODO: make TextInput multiliners.
-
+/**
+ * Component that adds flash card to the deck
+ */
 class AddCard extends Component{
 
   state = {
@@ -31,6 +32,10 @@ class AddCard extends Component{
     })
   }
 
+  /**
+   * Creates card object 
+   * dispatches action to creat card and navigates back to Deck view.
+   */
   saveCard(){
     const { navigation } = this.props
     const {deckId} = this.props.navigation.state.params
@@ -49,7 +54,6 @@ class AddCard extends Component{
   render(){
     const { navigation } = this.props
     const {deckId} = this.props.navigation.state.params
-    // console.log("L52 AddCard navigation.state.params = ",navigation.state.params)
 
     return(
       <KeyboardAvoidingView
