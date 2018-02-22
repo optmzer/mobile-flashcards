@@ -2,7 +2,7 @@ import * as TYPES from '../actions/types'
 
 // ====== DECK REDUCERS ======
 
-export function getAllDecksReducer(state, action){
+export function getAllDecksReducer(state = {decks: []}, action){
     switch (action.type) {
       case TYPES.GET_ALL_DECKS:
         return {

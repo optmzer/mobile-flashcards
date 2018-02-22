@@ -40,6 +40,7 @@ class AddDeck extends Component{
   setText(text){
     const { getAllDecksReducer } = this.props 
       //checks if there is a deck with the same title 
+      //after build gets a bug that getAllDecksReducer.decks.filter - is not a function
       let deckExists = getAllDecksReducer.decks.filter(deck => deck.title === text)
 
       if(deckExists.length == 0){
