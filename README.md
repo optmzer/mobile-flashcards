@@ -58,7 +58,10 @@ mobile-flashcards/
     icons8-questions-50.png - App icon
     icons8-questions-1024.png
   reducers/
+    card_reducers.js
+    deck_reducers.js
     index.js
+    quiz_reducers.js
   utils/
     helpers.js - helper functions
   App.js
