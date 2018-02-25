@@ -170,6 +170,81 @@ class FlashCard extends Component{
     navigation.goBack()
   }
 
+  editDeleteControls(){
+    return(
+      <View style={styles.editable}>
+        <TouchableOpacity
+          onPress={() => this.deleteCard()}
+          style={styles.editableIcons}>
+          <MaterialIcons name="delete-forever" size={30}/>
+          <Text>Delete</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.editableIcons}
+          onPress={() => this.setFrontEditable()}
+        >
+          <FontAwesome name="pencil-square-o" size={30}/>
+          <Text>Edit</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  saveCancelControls(){
+    return(
+      <View style={styles.editable}>
+        <TouchableOpacity
+          style={styles.editableIcons}
+          onPress={() => this.saveChanges()}
+        >
+          <FontAwesome name="save" size={30}/>
+          <Text>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.editableIcons}
+          onPress={() => this.cancelChanges()}
+        >
+          <FontAwesome name="close" size={30}/>
+          <Text>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  showQuestion(){
+    const { front_editable } = this.state
+    return(
+      <View>
+        <Text style={styles.textInputHeaders}>Question</Text>
+        <TextInput
+          style={styles.textInput}
+          multiline = {true}
+          numberOfLines = {3}
+          editable={front_editable}
+          onChangeText={(questionValue) => this.setState({questionValue})}
+          value={this.state.questionValue}
+        />
+      </View>
+    )
+  }
+
+  showAnswer(){
+    const { front_editable } = this.state
+    return(
+      <View>
+        <Text style={styles.textInputHeaders}>Answer</Text>
+        <TextInput
+          style={styles.textInput}
+          multiline = {true}
+          numberOfLines = {3}
+          editable={front_editable}
+          onChangeText={(answerValue) => this.setState({answerValue})}
+          value={this.state.answerValue}
+        />
+      </View>
+    )
+  }
+
   render(){
     const { front_editable, back_editable, card, voteCounter, deckLength } = this.state
     const { dispatch, quizReducer, getCardReducer, getDeckReducer, navigation } = this.props
@@ -190,38 +265,9 @@ class FlashCard extends Component{
             {
               !this.state.front_editable
               ?
-              <View style={styles.editable}>
-                <TouchableOpacity
-                  onPress={() => this.deleteCard()}
-                  style={styles.editableIcons}>
-                  <MaterialIcons name="delete-forever" size={30}/>
-                  <Text>Delete</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.editableIcons}
-                  onPress={() => this.setFrontEditable()}
-                >
-                  <FontAwesome name="pencil-square-o" size={30}/>
-                  <Text>Edit</Text>
-                </TouchableOpacity>
-              </View>
+                this.editDeleteControls()
               :
-              <View style={styles.editable}>
-                <TouchableOpacity
-                  style={styles.editableIcons}
-                  onPress={() => this.saveChanges()}
-                >
-                  <FontAwesome name="save" size={30}/>
-                  <Text>Save</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.editableIcons}
-                  onPress={() => this.cancelChanges()}
-                >
-                  <FontAwesome name="close" size={30}/>
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
-              </View>
+                this.saveCancelControls()
             }
           </View>
         }
@@ -232,28 +278,12 @@ class FlashCard extends Component{
             behavior="padding"
           >
             <View>
-            <Text style={styles.textInputHeaders}>Question</Text>
-            <TextInput
-              style={styles.textInput}
-              multiline = {true}
-              numberOfLines = {3}
-              editable={front_editable}
-              onChangeText={(questionValue) => this.setState({questionValue})}
-              value={this.state.questionValue}
-            />
+            {
+              this.showQuestion()
+            }
             {
               this.state.toggleAnswer &&
-              <View>
-                <Text style={styles.textInputHeaders}>Answer</Text>
-                <TextInput
-                  style={styles.textInput}
-                  multiline = {true}
-                  numberOfLines = {3}
-                  editable={front_editable}
-                  onChangeText={(answerValue) => this.setState({answerValue})}
-                  value={this.state.answerValue}
-                />
-              </View>
+              this.showAnswer()
             }
             </View>
           </KeyboardAvoidingView>

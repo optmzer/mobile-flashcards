@@ -17,7 +17,7 @@ import { connect } from 'react-redux'
  * If no decks found displays prompt to add some
  */
 
-class Home extends Component {
+class HomeScreen extends Component {
 
   componentWillMount(){
     this.props.dispatch(Action.getAllDecksAction())
@@ -74,7 +74,7 @@ class Home extends Component {
       </View>
     )//return()
   }//render()
-}//class Home
+}//class HomeScreen
 
 const styles = StyleSheet.create({
   continer: {
@@ -106,4 +106,4 @@ function mapStateToProps(state){
   }
 }
 
-export default connect(mapStateToProps)(Home)
+export default connect(mapStateToProps)(HomeScreen)
